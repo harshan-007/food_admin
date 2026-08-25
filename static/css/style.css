@@ -1,0 +1,667 @@
+/* =========================
+   Symposium Food Counter
+   Global Styles
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #26344a 0%, transparent 35%),
+        radial-gradient(circle at bottom right, #2a1f3d 0%, transparent 40%),
+        #0b0f19;
+    color: #ffffff;
+}
+
+
+/* =========================
+   Login Card
+========================= */
+
+.login-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 45px 40px;
+
+    background: rgba(20, 26, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.45);
+
+    backdrop-filter: blur(10px);
+}
+
+
+/* =========================
+   Logo / Title
+========================= */
+
+.login-card h2 {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.login-card p {
+    color: #9ca7b8 !important;
+}
+
+
+/* =========================
+   Form Labels
+========================= */
+
+.login-card .form-label {
+    color: #c7ced8;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+
+/* =========================
+   Input Fields
+========================= */
+
+.login-card .form-control {
+    background-color: #101722;
+    border: 1px solid #2a3545;
+    color: #ffffff;
+
+    padding: 13px 15px;
+    border-radius: 10px;
+}
+
+.login-card .form-control::placeholder {
+    color: #657083;
+}
+
+.login-card .form-control:focus {
+    background-color: #101722;
+    color: #ffffff;
+
+    border-color: #8b5cf6;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+
+/* =========================
+   Login Button
+========================= */
+
+.login-card .btn-primary {
+    border: none;
+    padding: 13px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+
+    transition: 0.3s ease;
+}
+
+.login-card .btn-primary:hover {
+    transform: translateY(-2px);
+
+    background: linear-gradient(135deg, #8b5cf6, #c084fc);
+
+    box-shadow:
+        0 8px 25px rgba(139, 92, 246, 0.35);
+}
+/* =========================
+   Dashboard Navbar
+========================= */
+
+.dashboard-navbar {
+    padding: 18px 0;
+    background-color: rgba(11, 15, 25, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-navbar .navbar-brand {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.dashboard-navbar .navbar-brand:hover {
+    color: #c084fc;
+}
+
+.admin-text {
+    color: #aab4c3;
+    font-size: 0.9rem;
+}
+
+
+/* =========================
+   Dashboard Header
+========================= */
+
+.dashboard-label {
+    color: #a855f7;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.dashboard-header h1 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   Statistics Cards
+========================= */
+
+.stats-card {
+    height: 100%;
+    padding: 28px;
+
+    background: rgba(20, 26, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 16px;
+
+    transition: 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(168, 85, 247, 0.4);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.stats-card p {
+    color: #9ca7b8;
+    margin-bottom: 12px;
+}
+
+.stats-card h2 {
+    color: #ffffff;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.stats-card span {
+    color: #657083;
+    font-size: 0.85rem;
+}
+
+
+/* =========================
+   Scanner Action Card
+========================= */
+
+.scanner-action-card {
+    max-width: 750px;
+    margin: auto;
+    padding: 50px 30px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(124, 58, 237, 0.18),
+        rgba(20, 26, 38, 0.95)
+    );
+
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 20px;
+}
+
+.scanner-icon {
+    font-size: 3rem;
+}
+
+.scanner-action-card h3 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.scanner-action-card p {
+    max-width: 500px;
+    margin: 15px auto 25px;
+    color: #9ca7b8;
+}
+
+
+/* =========================
+   Scan Button
+========================= */
+
+.btn-scan {
+    padding: 13px 28px;
+
+    color: #ffffff;
+    font-weight: 600;
+
+    border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #a855f7
+    );
+
+    transition: 0.3s ease;
+}
+
+.btn-scan:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 30px rgba(139, 92, 246, 0.35);
+}
+/* =========================
+   Scanner Navbar
+========================= */
+
+.scanner-navbar {
+    padding: 18px 0;
+    background-color: rgba(11, 15, 25, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.back-link {
+    color: #aab4c3;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.3s ease;
+}
+
+.back-link:hover {
+    color: #c084fc;
+}
+
+.scanner-navbar .navbar-brand {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+
+/* =========================
+   Scanner Page Header
+========================= */
+
+.scanner-page-header h1 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+
+/* =========================
+   QR Scanner Card
+========================= */
+
+.qr-scanner-card {
+    height: 100%;
+    padding: 30px;
+
+    background: rgba(20, 26, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+}
+
+
+/* Camera Placeholder */
+
+.camera-placeholder {
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    background: #101722;
+    border: 2px dashed #344055;
+    border-radius: 15px;
+}
+
+.camera-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.camera-placeholder h4 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.camera-placeholder p {
+    color: #778196;
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   Manual QR Input
+========================= */
+
+.manual-input p {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.manual-input .form-control {
+    background-color: #101722;
+    border: 1px solid #2a3545;
+    color: #ffffff;
+    padding: 12px;
+}
+
+.manual-input .form-control:focus {
+    background-color: #101722;
+    color: #ffffff;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+
+/* =========================
+   Participant Card
+========================= */
+
+.participant-card {
+    height: 100%;
+    min-height: 450px;
+
+    padding: 30px;
+
+    background: rgba(20, 26, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.participant-empty {
+    color: #ffffff;
+}
+
+.empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.participant-empty h4 {
+    font-weight: 600;
+}
+
+.participant-empty p {
+    color: #778196;
+    max-width: 280px;
+}
+
+
+/* =========================
+   Mobile Responsive
+========================= */
+
+@media (max-width: 768px) {
+
+    .scanner-navbar .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .scanner-page-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .camera-placeholder {
+        min-height: 230px;
+    }
+
+    .participant-card {
+        min-height: 350px;
+    }
+
+}
+/* =========================
+   Participant Details
+========================= */
+
+.participant-details h3 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-row span {
+    color: #8f9aad;
+    font-size: 0.9rem;
+}
+
+.detail-row strong {
+    color: #ffffff;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+
+/* =========================
+   Food Status
+========================= */
+
+.food-status {
+    margin-top: 25px;
+    padding: 14px 16px;
+
+    border-radius: 10px;
+
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.not-claimed {
+    color: #86efac;
+    background-color: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+
+/* =========================
+   Claim Food Button
+========================= */
+
+.btn-claim {
+    padding: 13px;
+
+    border: none;
+    border-radius: 10px;
+
+    color: #ffffff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+
+    transition: 0.3s ease;
+}
+
+.btn-claim:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.35);
+}
+
+
+/* =========================
+   Claim Success Screen
+========================= */
+
+.claim-success {
+    width: 100%;
+}
+
+.success-icon {
+    width: 75px;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: rgba(34, 197, 94, 0.15);
+    border: 2px solid rgba(34, 197, 94, 0.5);
+
+    color: #86efac;
+
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.claim-success h3 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.claim-success p {
+    color: #8f9aad;
+    max-width: 350px;
+    margin: 15px auto;
+}
+/* =========================
+   Already Claimed Status
+========================= */
+
+.already-claimed {
+    color: #fca5a5;
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.btn-already-claimed {
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+
+    font-weight: 600;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* =========================
+   QR Camera Enhancements
+========================= */
+
+#qr-reader {
+    overflow: hidden;
+    border-radius: 16px;
+    background: #0f1522;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    min-height: 260px;
+    position: relative;
+}
+
+#qr-reader video {
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 14px;
+    object-fit: cover;
+    display: block;
+}
+
+#qr-reader__scan_region {
+    background: transparent !important;
+}
+
+#qr-reader__dashboard {
+    padding: 10px;
+}
+
+.scanner-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.scanner-controls .btn {
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+}
+
+.scanner-status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    background: rgba(16, 23, 34, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.scanner-status-badge.active {
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #86efac;
+}
+
+.scanner-status-badge.error {
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+
+.scanner-status-badge.scanning {
+    border-color: rgba(168, 85, 247, 0.4);
+    color: #c084fc;
+}
+
+.scan-pulse {
+    animation: scannerGlow 2s infinite alternate;
+}
+
+@keyframes scannerGlow {
+    0% {
+        box-shadow: 0 0 5px rgba(168, 85, 247, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+}
