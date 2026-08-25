@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.utils import timezone
 import json
 from symposium.supabase_config import get_supabase
 
@@ -132,22 +133,26 @@ def claim_food(request):
             'message': 'Food already claimed',
         }, status=400)
     
-    # Update participant
-    from datetime import datetime
+    # Use one timestamp for both the participant record and the audit row.
+    claimed_at = timezone.now().isoformat()
     update_data = {
         'food_claimed': True,
-        'claimed_at': datetime.now().isoformat(),
+        'claimed_at': claimed_at,
     }
     
-    supabase.table("participants").update(update_data).eq("id", participant['id']).execute()
+    update_response = supabase.table("participants").update(update_data).eq("id", participant['id']).execute()
+    if not update_response.data:
+        return JsonResponse({'error': 'Participant could not be updated'}, status=409)
     
-    # Log claim (optional)
+    # Keep a separate audit record for each successful distribution.
     claim_data = {
         'participant_id': participant['id'],
         'claimed_by_admin': request.user.username,
-        'claimed_at': datetime.now().isoformat(),
+        'claimed_at': claimed_at,
     }
-    supabase.table("claims").insert(claim_data).execute()
+    claim_response = supabase.table("claims").insert(claim_data).execute()
+    if not claim_response.data:
+        return JsonResponse({'error': 'Claim was not recorded'}, status=502)
     
     return JsonResponse({
         'success': True,

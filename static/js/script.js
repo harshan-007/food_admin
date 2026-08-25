@@ -96,26 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    /* =====================================================
-       DASHBOARD STATISTICS UPDATE
-    ===================================================== */
-    function updateDashboardStats() {
-        const totalEl = document.getElementById("totalParticipantsCount");
-        const claimedEl = document.getElementById("foodClaimedCount");
-        const pendingEl = document.getElementById("pendingFoodCount");
-
-        if (totalEl || claimedEl || pendingEl) {
-            const participants = getParticipants();
-            const total = participants.length;
-            const claimed = participants.filter(p => p.status === "Claimed").length;
-            const pending = total - claimed;
-
-            if (totalEl) totalEl.textContent = total;
-            if (claimedEl) claimedEl.textContent = claimed;
-            if (pendingEl) pendingEl.textContent = Math.max(0, pending);
-        }
-    }
-
     function findOrGenerateParticipant(rawCode) {
         const trimmed = rawCode.trim();
         const participants = getParticipants();
