@@ -1,7 +1,29 @@
-/* =========================
-   Symposium Food Counter
-   Global Styles
-========================= */
+/* =====================================================
+   SYMPOSIUM FOOD COUNTER - MASTER DESIGN SYSTEM
+   Modern, Dark Glassmorphism, Responsive CSS
+===================================================== */
+
+:root {
+    --bg-primary: #0a0e17;
+    --bg-surface: rgba(18, 24, 38, 0.85);
+    --bg-surface-hover: rgba(28, 36, 56, 0.95);
+    --bg-surface-solid: #121826;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-focus: #8b5cf6;
+    
+    --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    --primary-hover: linear-gradient(135deg, #8b5cf6 0%, #c084fc 100%);
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --color-veg: #10b981;
+    --color-nonveg: #f59e0b;
+    --color-claimed: #3b82f6;
+}
 
 * {
     margin: 0;
@@ -11,600 +33,413 @@
 
 body {
     min-height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background:
-        radial-gradient(circle at top left, #26344a 0%, transparent 35%),
-        radial-gradient(circle at bottom right, #2a1f3d 0%, transparent 40%),
-        #0b0f19;
-    color: #ffffff;
+        radial-gradient(circle at 10% 10%, rgba(124, 58, 237, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+        var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
 }
 
+/* =====================================================
+   TYPOGRAPHY & SHARED HEADERS
+===================================================== */
 
-/* =========================
-   Login Card
-========================= */
-
-.login-card {
-    width: 100%;
-    max-width: 430px;
-    padding: 45px 40px;
-
-    background: rgba(20, 26, 38, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 20px;
-
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.45);
-
-    backdrop-filter: blur(10px);
-}
-
-
-/* =========================
-   Logo / Title
-========================= */
-
-.login-card h2 {
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #ffffff;
-}
-
-.login-card p {
-    color: #9ca7b8 !important;
-}
-
-
-/* =========================
-   Form Labels
-========================= */
-
-.login-card .form-label {
-    color: #c7ced8;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-
-/* =========================
-   Input Fields
-========================= */
-
-.login-card .form-control {
-    background-color: #101722;
-    border: 1px solid #2a3545;
-    color: #ffffff;
-
-    padding: 13px 15px;
-    border-radius: 10px;
-}
-
-.login-card .form-control::placeholder {
-    color: #657083;
-}
-
-.login-card .form-control:focus {
-    background-color: #101722;
-    color: #ffffff;
-
-    border-color: #8b5cf6;
-
-    box-shadow:
-        0 0 0 3px rgba(139, 92, 246, 0.15);
-}
-
-
-/* =========================
-   Login Button
-========================= */
-
-.login-card .btn-primary {
-    border: none;
-    padding: 13px;
-
-    border-radius: 10px;
-
-    font-weight: 600;
-    letter-spacing: 0.5px;
-
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
-
-    transition: 0.3s ease;
-}
-
-.login-card .btn-primary:hover {
-    transform: translateY(-2px);
-
-    background: linear-gradient(135deg, #8b5cf6, #c084fc);
-
-    box-shadow:
-        0 8px 25px rgba(139, 92, 246, 0.35);
-}
-/* =========================
-   Dashboard Navbar
-========================= */
-
-.dashboard-navbar {
-    padding: 18px 0;
-    background-color: rgba(11, 15, 25, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.dashboard-navbar .navbar-brand {
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.1rem;
-}
-
-.dashboard-navbar .navbar-brand:hover {
+.dashboard-tag {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
     color: #c084fc;
+    margin-bottom: 4px;
 }
 
-.admin-text {
-    color: #aab4c3;
-    font-size: 0.9rem;
-}
-
-
-/* =========================
-   Dashboard Header
-========================= */
-
-.dashboard-label {
-    color: #a855f7;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-}
-
-.dashboard-header h1 {
+.dashboard-title {
+    font-size: 1.85rem;
+    font-weight: 800;
     color: #ffffff;
-    font-weight: 700;
-    margin-bottom: 10px;
+    letter-spacing: -0.5px;
 }
 
-
-/* =========================
-   Statistics Cards
-========================= */
-
-.stats-card {
-    height: 100%;
-    padding: 28px;
-
-    background: rgba(20, 26, 38, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 16px;
-
-    transition: 0.3s ease;
+.dashboard-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
-.stats-card:hover {
-    transform: translateY(-5px);
+/* =====================================================
+   NAVBARS
+===================================================== */
 
-    border-color: rgba(168, 85, 247, 0.4);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.25);
-}
-
-.stats-card p {
-    color: #9ca7b8;
-    margin-bottom: 12px;
-}
-
-.stats-card h2 {
-    color: #ffffff;
-    font-size: 2.4rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.stats-card span {
-    color: #657083;
-    font-size: 0.85rem;
-}
-
-
-/* =========================
-   Scanner Action Card
-========================= */
-
-.scanner-action-card {
-    max-width: 750px;
-    margin: auto;
-    padding: 50px 30px;
-
-    background: linear-gradient(
-        135deg,
-        rgba(124, 58, 237, 0.18),
-        rgba(20, 26, 38, 0.95)
-    );
-
-    border: 1px solid rgba(168, 85, 247, 0.25);
-    border-radius: 20px;
-}
-
-.scanner-icon {
-    font-size: 3rem;
-}
-
-.scanner-action-card h3 {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.scanner-action-card p {
-    max-width: 500px;
-    margin: 15px auto 25px;
-    color: #9ca7b8;
-}
-
-
-/* =========================
-   Scan Button
-========================= */
-
-.btn-scan {
-    padding: 13px 28px;
-
-    color: #ffffff;
-    font-weight: 600;
-
-    border: none;
-    border-radius: 10px;
-
-    background: linear-gradient(
-        135deg,
-        #7c3aed,
-        #a855f7
-    );
-
-    transition: 0.3s ease;
-}
-
-.btn-scan:hover {
-    color: #ffffff;
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 30px rgba(139, 92, 246, 0.35);
-}
-/* =========================
-   Scanner Navbar
-========================= */
-
+.dashboard-navbar,
 .scanner-navbar {
-    padding: 18px 0;
-    background-color: rgba(11, 15, 25, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 14, 23, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 0;
+    z-index: 1020;
+}
+
+.brand-icon {
+    font-size: 1.4rem;
+}
+
+.brand-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+}
+
+.user-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    border-radius: 30px;
+    padding: 4px 12px 4px 6px;
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.user-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 .back-link {
-    color: #aab4c3;
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.9rem;
-    transition: 0.3s ease;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 .back-link:hover {
     color: #c084fc;
+    transform: translateX(-3px);
 }
 
-.scanner-navbar .navbar-brand {
-    color: #ffffff;
-    font-weight: 700;
-}
+/* =====================================================
+   BUTTONS
+===================================================== */
 
-
-/* =========================
-   Scanner Page Header
-========================= */
-
-.scanner-page-header h1 {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-
-/* =========================
-   QR Scanner Card
-========================= */
-
-.qr-scanner-card {
-    height: 100%;
-    padding: 30px;
-
-    background: rgba(20, 26, 38, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 20px;
-}
-
-
-/* Camera Placeholder */
-
-.camera-placeholder {
-    min-height: 280px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-
-    background: #101722;
-    border: 2px dashed #344055;
-    border-radius: 15px;
-}
-
-.camera-icon {
-    font-size: 3.5rem;
-    margin-bottom: 15px;
-}
-
-.camera-placeholder h4 {
+.btn-primary-custom {
+    background: var(--primary-gradient);
     color: #ffffff;
     font-weight: 600;
-}
-
-.camera-placeholder p {
-    color: #778196;
-    margin-bottom: 0;
-}
-
-
-/* =========================
-   Manual QR Input
-========================= */
-
-.manual-input p {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.manual-input .form-control {
-    background-color: #101722;
-    border: 1px solid #2a3545;
-    color: #ffffff;
-    padding: 12px;
-}
-
-.manual-input .form-control:focus {
-    background-color: #101722;
-    color: #ffffff;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-}
-
-
-/* =========================
-   Participant Card
-========================= */
-
-.participant-card {
-    height: 100%;
-    min-height: 450px;
-
-    padding: 30px;
-
-    background: rgba(20, 26, 38, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    border-radius: 20px;
-
-    display: flex;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 18px;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
 }
 
-.participant-empty {
+.btn-primary-custom:hover {
+    background: var(--primary-hover);
     color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
 }
 
-.empty-icon {
-    font-size: 3.5rem;
-    margin-bottom: 15px;
-}
-
-.participant-empty h4 {
+.btn-secondary-custom {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
     font-weight: 600;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 9px 18px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
-.participant-empty p {
-    color: #778196;
-    max-width: 280px;
+.btn-secondary-custom:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-
-/* =========================
-   Mobile Responsive
-========================= */
-
-@media (max-width: 768px) {
-
-    .scanner-navbar .container {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .scanner-page-header h1 {
-        font-size: 1.8rem;
-    }
-
-    .camera-placeholder {
-        min-height: 230px;
-    }
-
-    .participant-card {
-        min-height: 350px;
-    }
-
-}
-/* =========================
-   Participant Details
-========================= */
-
-.participant-details h3 {
+.btn-claim-action {
+    background: var(--success-gradient);
     color: #ffffff;
     font-weight: 700;
+    font-size: 1.05rem;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
 }
 
-.detail-row {
+.btn-claim-action:hover {
+    filter: brightness(1.1);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+.btn-quick-claim {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.btn-quick-claim:hover {
+    background: #10b981;
+    color: #ffffff;
+    border-color: #10b981;
+}
+
+/* =====================================================
+   STATISTICS CARDS
+===================================================== */
+
+.stats-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.stat-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding: 15px 0;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    margin-bottom: 12px;
 }
 
-.detail-row span {
-    color: #8f9aad;
-    font-size: 0.9rem;
-}
-
-.detail-row strong {
-    color: #ffffff;
-    font-size: 0.9rem;
-    text-align: right;
-}
-
-
-/* =========================
-   Food Status
-========================= */
-
-.food-status {
-    margin-top: 25px;
-    padding: 14px 16px;
-
-    border-radius: 10px;
-
+.stat-label {
+    font-size: 0.85rem;
     font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.not-claimed {
-    color: #86efac;
-    background-color: rgba(34, 197, 94, 0.12);
-    border: 1px solid rgba(34, 197, 94, 0.25);
-}
-
-
-/* =========================
-   Claim Food Button
-========================= */
-
-.btn-claim {
-    padding: 13px;
-
-    border: none;
-    border-radius: 10px;
-
-    color: #ffffff;
-    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
     letter-spacing: 0.5px;
-
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
-
-    transition: 0.3s ease;
 }
 
-.btn-claim:hover {
+.stat-icon {
+    font-size: 1.35rem;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
     color: #ffffff;
-    transform: translateY(-2px);
-
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.35);
+    line-height: 1;
+    margin-bottom: 12px;
 }
 
+.stat-breakdown {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-/* =========================
-   Claim Success Screen
-========================= */
+.dot-separator {
+    color: var(--text-muted);
+}
 
-.claim-success {
+/* =====================================================
+   CONTENT CARDS & TABLES
+===================================================== */
+
+.content-card {
+    background: var(--bg-surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.card-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.card-subheading {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.search-box {
+    position: relative;
+    min-width: 220px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.search-box input {
+    background: rgba(10, 14, 23, 0.7);
+    border: 1px solid var(--border-subtle);
+    color: #ffffff;
+    padding-left: 32px;
+    border-radius: 8px;
+}
+
+.search-box input:focus {
+    background: rgba(10, 14, 23, 0.9);
+    border-color: #8b5cf6;
+    color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.filter-btn-group .filter-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 5px 12px;
+}
+
+.filter-btn-group .filter-btn.active {
+    background: var(--primary-gradient);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.custom-table {
+    margin-bottom: 0;
+    color: var(--text-primary);
+}
+
+.custom-table thead th {
+    background: rgba(10, 14, 23, 0.6);
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 12px 16px;
+}
+
+.custom-table tbody td {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 14px 16px;
+    font-size: 0.9rem;
+}
+
+.custom-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.badge-veg {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+.badge-nonveg {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+.badge-claimed {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+.badge-pending {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* =====================================================
+   SCANNER PAGE COMPONENTS
+===================================================== */
+
+.scanner-card,
+.participant-card-wrapper {
+    background: var(--bg-surface);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 28px;
+    min-height: 480px;
+}
+
+.scanner-viewport-wrapper {
+    background: #080c14;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 250px;
+}
+
+.scanner-viewport {
     width: 100%;
 }
 
-.success-icon {
-    width: 75px;
-    height: 75px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin: 0 auto 20px;
-
-    border-radius: 50%;
-
-    background: rgba(34, 197, 94, 0.15);
-    border: 2px solid rgba(34, 197, 94, 0.5);
-
-    color: #86efac;
-
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.claim-success h3 {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.claim-success p {
-    color: #8f9aad;
-    max-width: 350px;
-    margin: 15px auto;
-}
-/* =========================
-   Already Claimed Status
-========================= */
-
-.already-claimed {
-    color: #fca5a5;
-    background-color: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-}
-
-.btn-already-claimed {
-    padding: 13px;
-    border: none;
-    border-radius: 10px;
-
-    background-color: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
-
-    font-weight: 600;
-    cursor: not-allowed;
-    opacity: 0.8;
-}
-
-/* =========================
-   QR Camera Enhancements
-========================= */
-
-#qr-reader {
-    overflow: hidden;
-    border-radius: 16px;
-    background: #0f1522;
-    border: 1px solid rgba(168, 85, 247, 0.3);
-    min-height: 260px;
-    position: relative;
-}
-
-#qr-reader video {
+.scanner-viewport video {
     width: 100% !important;
     height: auto !important;
     border-radius: 14px;
     object-fit: cover;
-    display: block;
 }
 
 #qr-reader__scan_region {
@@ -612,21 +447,43 @@ body {
 }
 
 #qr-reader__dashboard {
-    padding: 10px;
+    display: none !important;
 }
 
-.scanner-controls {
+.scanner-divider {
     display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 12px;
+    align-items: center;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
-.scanner-controls .btn {
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    border-radius: 8px;
+.scanner-divider::before,
+.scanner-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.scanner-divider span {
+    padding: 0 12px;
+}
+
+.manual-qr-input {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--border-subtle);
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 10px 0 0 10px;
+}
+
+.manual-qr-input:focus {
+    background: rgba(10, 14, 23, 0.95);
+    color: #ffffff;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
 }
 
 .scanner-status-badge {
@@ -634,18 +491,19 @@ body {
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.85rem;
+    font-weight: 600;
     background: rgba(16, 23, 34, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-subtle);
 }
 
 .scanner-status-badge.active {
-    border-color: rgba(34, 197, 94, 0.4);
-    color: #86efac;
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #34d399;
 }
 
 .scanner-status-badge.error {
     border-color: rgba(239, 68, 68, 0.4);
-    color: #fca5a5;
+    color: #f87171;
 }
 
 .scanner-status-badge.scanning {
@@ -654,14 +512,173 @@ body {
 }
 
 .scan-pulse {
-    animation: scannerGlow 2s infinite alternate;
+    animation: scannerPulseGlow 2s infinite alternate;
 }
 
-@keyframes scannerGlow {
-    0% {
-        box-shadow: 0 0 5px rgba(168, 85, 247, 0.2);
-    }
-    100% {
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-    }
-}
+@keyframes scannerPulseGlow {
+    0% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.2); }
+    100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
+}
+
+/* =====================================================
+   PARTICIPANT RESULT CARD
+===================================================== */
+
+.participant-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.detail-val {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: right;
+}
+
+.status-banner {
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.banner-success {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.banner-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+}
+
+.banner-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.banner-sub {
+    font-size: 0.85rem;
+    margin-top: 2px;
+    opacity: 0.9;
+}
+
+/* Success Animation Card */
+.success-animation-icon {
+    width: 68px;
+    height: 68px;
+    background: rgba(16, 185, 129, 0.2);
+    border: 2px solid #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: #34d399;
+    margin: 0 auto;
+    animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.success-summary-box {
+    background: rgba(10, 14, 23, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+}
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+
+.login-body {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+        var(--bg-primary);
+}
+
+.login-card-wrapper {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 24px;
+    padding: 40px 32px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.login-brand-icon {
+    font-size: 2.6rem;
+}
+
+.login-input {
+    background: rgba(10, 14, 23, 0.7);
+    border: 1px solid var(--border-subtle);
+    color: #ffffff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+.login-input:focus {
+    background: rgba(10, 14, 23, 0.95);
+    border-color: #8b5cf6;
+    color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+
+/* =====================================================
+   MODALS
+===================================================== */
+
+.custom-modal {
+    background: var(--bg-surface-solid);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    color: var(--text-primary);
+}
+
+.custom-file-input {
+    background: rgba(10, 14, 23, 0.8);
+    border: 1px solid var(--border-subtle);
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.custom-file-input:focus {
+    background: rgba(10, 14, 23, 0.95);
+    border-color: #8b5cf6;
+    color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}

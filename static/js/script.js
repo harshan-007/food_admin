@@ -1,175 +1,33 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       LOGIN HANDLER
+       CSRF & UTILITY HELPERS
     ===================================================== */
 
-    const loginForm = document.getElementById("loginForm");
-
-    if (loginForm) {
-        // If form has no action attribute or method POST, handle via JS navigation
-        if (!loginForm.getAttribute("action")) {
-            loginForm.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-                const username = document.getElementById("username").value.trim();
-                const password = document.getElementById("password").value.trim();
-
-                if (username === "" || password === "") {
-                    alert("Please enter your username and password.");
-                    return;
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
-
-                window.location.href = "/dashboard/";
-            });
-        }
-    }
-
-
-    /* =====================================================
-       PARTICIPANT DATABASE & LOCALSTORAGE PERSISTENCE
-    ===================================================== */
-
-    const STORAGE_KEY = "symposium_food_participants";
-
-    const defaultParticipants = [
-        {
-            id: "SYM-2024-001",
-            name: "Rahul Sharma",
-            college: "Dept of Computer Science, CEG",
-            food: "Veg",
-            status: "Not Claimed",
-            claimedAt: null
-        },
-        {
-            id: "SYM-2024-002",
-            name: "Ananya Iyer",
-            college: "School of Architecture, Anna Univ",
-            food: "Non-Veg",
-            status: "Not Claimed",
-            claimedAt: null
-        },
-        {
-            id: "SYM-2024-003",
-            name: "Karthik Raja",
-            college: "Dept of Information Tech, MIT",
-            food: "Veg",
-            status: "Claimed",
-            claimedAt: "12:45 PM"
-        },
-        {
-            id: "SYM-2024-004",
-            name: "Sneha Patel",
-            college: "Dept of EEE, PSG Tech",
-            food: "Non-Veg",
-            status: "Not Claimed",
-            claimedAt: null
-        },
-        {
-            id: "SYM-2024-005",
-            name: "Vikas Kumar",
-            college: "Dept of Mechanical, SSN",
-            food: "Veg",
-            status: "Not Claimed",
-            claimedAt: null
-        }
-    ];
-
-    function getParticipants() {
-        try {
-            const data = localStorage.getItem(STORAGE_KEY);
-            if (data) {
-                return JSON.parse(data);
             }
-        } catch (e) {
-            console.error("Error reading localStorage:", e);
         }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultParticipants));
-        return defaultParticipants;
+        return cookieValue || "";
     }
 
-    function saveParticipants(participants) {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
-        } catch (e) {
-            console.error("Error saving to localStorage:", e);
-        }
+    function escapeHtml(str) {
+        if (!str) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
-
-    /* =====================================================
-       DASHBOARD STATISTICS UPDATE
-    ===================================================== */
-    function updateDashboardStats() {
-        const totalEl = document.getElementById("totalParticipantsCount");
-        const claimedEl = document.getElementById("foodClaimedCount");
-        const pendingEl = document.getElementById("pendingFoodCount");
-
-        if (totalEl || claimedEl || pendingEl) {
-            const participants = getParticipants();
-            const total = participants.length;
-            const claimed = participants.filter(p => p.status === "Claimed").length;
-            const pending = total - claimed;
-
-            if (totalEl) totalEl.textContent = total;
-            if (claimedEl) claimedEl.textContent = claimed;
-            if (pendingEl) pendingEl.textContent = Math.max(0, pending);
-        }
-    }
-
-    function findOrGenerateParticipant(rawCode) {
-        const trimmed = rawCode.trim();
-        const participants = getParticipants();
-
-        // 1. Try parsing JSON in QR code if applicable
-        try {
-            if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-                const parsed = JSON.parse(trimmed);
-                const id = parsed.id || parsed.participantId || "SYM-" + Math.floor(1000 + Math.random() * 9000);
-                const existing = participants.find(p => p.id.toUpperCase() === id.toUpperCase());
-                if (existing) {
-                    return existing;
-                }
-                const newParticipant = {
-                    id: id,
-                    name: parsed.name || "Participant " + id,
-                    college: parsed.college || parsed.institution || "Registered Delegate",
-                    food: parsed.food || "Veg",
-                    status: parsed.status || "Not Claimed",
-                    claimedAt: parsed.claimedAt || null
-                };
-                participants.push(newParticipant);
-                saveParticipants(participants);
-                return newParticipant;
-            }
-        } catch (err) {
-            console.log("Not JSON format, resolving as ID:", trimmed);
-        }
-
-        // 2. Lookup existing participant by ID or Name
-        const found = participants.find(
-            p => p.id.toUpperCase() === trimmed.toUpperCase() ||
-                 p.name.toUpperCase() === trimmed.toUpperCase()
-        );
-
-        if (found) {
-            return found;
-        }
-
-        // 3. Dynamic Fallback for any scanned QR code / Custom ID
-        const cleanId = trimmed.toUpperCase().startsWith("SYM-") ? trimmed.toUpperCase() : `SYM-${trimmed.toUpperCase()}`;
-        const newRecord = {
-            id: cleanId,
-            name: `Participant (${trimmed})`,
-            college: "Symposium Delegate",
-            food: "Veg",
-            status: "Not Claimed",
-            claimedAt: null
-        };
-        participants.push(newRecord);
-        saveParticipants(participants);
-        return newRecord;
-    }
-
 
     /* =====================================================
        AUDIO & HAPTIC FEEDBACK
@@ -178,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function playFeedback(type = "beep") {
         try {
             if ("vibrate" in navigator) {
-                navigator.vibrate(type === "success" ? [100, 50, 100] : 120);
+                navigator.vibrate(type === "success" ? [100, 50, 100] : 80);
             }
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (AudioCtx) {
@@ -188,13 +46,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 osc.type = "sine";
                 if (type === "success") {
-                    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.15); // G5
+                } else if (type === "error") {
+                    osc.frequency.setValueAtTime(300, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(150, ctx.currentTime + 0.2);
                 } else {
-                    osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+                    osc.frequency.setValueAtTime(880, ctx.currentTime); // A5 beep
                 }
 
-                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
 
                 osc.connect(gain);
@@ -204,13 +65,132 @@ document.addEventListener("DOMContentLoaded", function () {
                 osc.stop(ctx.currentTime + 0.2);
             }
         } catch (e) {
-            // Audio context not allowed before interaction
+            // Audio context restriction before user gesture
         }
     }
 
 
     /* =====================================================
-       QR SCANNER DOM ELEMENTS
+       DASHBOARD LIVE ROSTER (SEARCH, FILTER, QUICK CLAIM)
+    ===================================================== */
+
+    const tableSearchInput = document.getElementById("tableSearchInput");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const participantRows = document.querySelectorAll(".participant-row");
+    const totalParticipantsCount = document.getElementById("totalParticipantsCount");
+    const foodClaimedCount = document.getElementById("foodClaimedCount");
+    const pendingFoodCount = document.getElementById("pendingFoodCount");
+
+    if (tableSearchInput || filterButtons.length > 0) {
+        let currentFilter = "all";
+        let searchQuery = "";
+
+        function refreshStatsCounters() {
+            if (!totalParticipantsCount || !foodClaimedCount || !pendingFoodCount) return;
+
+            const claimedCount = document.querySelectorAll('.participant-row[data-status="claimed"]').length;
+            const totalCount = participantRows.length;
+            totalParticipantsCount.textContent = totalCount;
+            foodClaimedCount.textContent = claimedCount;
+            pendingFoodCount.textContent = totalCount - claimedCount;
+        }
+
+        function applyTableFilters() {
+            let visibleCount = 0;
+            participantRows.forEach(row => {
+                const rowStatus = row.getAttribute("data-status");
+                const rowText = row.textContent.toLowerCase();
+
+                const matchesStatus = (currentFilter === "all") || (rowStatus === currentFilter);
+                const matchesSearch = searchQuery === "" || rowText.includes(searchQuery);
+
+                if (matchesStatus && matchesSearch) {
+                    row.style.display = "";
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            const emptyRow = document.getElementById("emptyTableRow");
+            if (emptyRow && participantRows.length > 0) {
+                emptyRow.style.display = (visibleCount === 0) ? "" : "none";
+            }
+        }
+
+        if (tableSearchInput) {
+            tableSearchInput.addEventListener("input", function (e) {
+                searchQuery = e.target.value.trim().toLowerCase();
+                applyTableFilters();
+            });
+        }
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener("click", function () {
+                filterButtons.forEach(b => b.classList.remove("active"));
+                this.classList.add("active");
+                currentFilter = this.getAttribute("data-filter");
+                applyTableFilters();
+            });
+        });
+
+        // Quick Claim button on dashboard table rows
+        document.querySelectorAll(".btn-quick-claim").forEach(btn => {
+            btn.addEventListener("click", async function () {
+                const token = this.getAttribute("data-token");
+                const name = this.getAttribute("data-name");
+
+                if (!confirm(`Confirm meal distribution for ${name}?`)) {
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.textContent = "Processing...";
+
+                try {
+                    const response = await fetch("/api/claim/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCookie("csrftoken")
+                        },
+                        body: JSON.stringify({ token: token })
+                    });
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        playFeedback("success");
+                        const row = btn.closest("tr");
+                        if (row) {
+                            row.setAttribute("data-status", "claimed");
+                            const statusTd = row.children[4];
+                            const timeTd = row.children[5];
+                            const actionTd = row.children[6];
+
+                            if (statusTd) statusTd.innerHTML = '<span class="badge badge-claimed">Claimed</span>';
+                            if (timeTd) timeTd.textContent = result.participant.claimed_at || "Just now";
+                            if (actionTd) actionTd.innerHTML = '<span class="text-success small fw-semibold">✓ Served</span>';
+                        }
+                        // Refresh stats in dashboard cards
+                        refreshStatsCounters();
+                    } else {
+                        playFeedback("error");
+                        alert(result.message || result.error || "Failed to claim food.");
+                        btn.disabled = false;
+                        btn.textContent = "Distribute";
+                    }
+                } catch (err) {
+                    console.error("Quick claim error:", err);
+                    alert("Network error. Could not connect to server.");
+                    btn.disabled = false;
+                    btn.textContent = "Distribute";
+                }
+            });
+        });
+    }
+
+    /* =====================================================
+       QR SCANNER STATION LOGIC
     ===================================================== */
 
     const qrInput = document.getElementById("qrCode");
@@ -221,67 +201,80 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnSwitchCamera = document.getElementById("btnSwitchCamera");
     const btnRestartCamera = document.getElementById("btnRestartCamera");
 
-    // Only proceed with scanner logic if scanner elements exist on this page
+    // Only run scanner engine on scanner page
     if (!qrReader && !participantCard) {
         return;
     }
 
-
-    /* =====================================================
-       RENDER VIEWS
-    ===================================================== */
-
     function renderEmptyState() {
         if (!participantCard) return;
         participantCard.innerHTML = `
-            <div class="participant-empty text-center">
-                <div class="empty-icon">👤</div>
-                <h4>No Participant Selected</h4>
-                <p>Scan or enter a QR code to view participant details.</p>
+            <div class="participant-empty text-center py-5">
+                <div class="empty-icon mb-3">👤</div>
+                <h4 class="text-white fw-bold">Awaiting QR Scan</h4>
+                <p class="text-secondary mb-0">
+                    Scan a QR badge using the camera or enter the participant ID manually to verify eligibility.
+                </p>
             </div>
         `;
     }
 
-    function renderParticipantDetails(participant) {
+    function renderParticipantDetails(participant, isValid, message) {
         if (!participantCard) return;
 
-        const isClaimed = participant.food_claimed || participant.status === "Claimed";
-        const food = participant.food || "Meal";
-        const foodBadgeClass = food.toLowerCase().includes("non") ? "bg-warning text-dark" : "bg-success";
+        const isClaimed = participant.food_claimed;
+        const food = participant.food || "Veg";
+        const isVeg = food.toLowerCase() === "veg";
+        const badgeClass = isVeg ? "badge-veg" : "badge-nonveg";
+        const foodIcon = isVeg ? "🥗" : "🍗";
 
         participantCard.innerHTML = `
-            <div class="participant-details w-100">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3 class="mb-0 fw-bold">${escapeHtml(participant.name)}</h3>
-                    <span class="badge ${foodBadgeClass} px-3 py-2 fs-6">${escapeHtml(food)}</span>
+            <div class="participant-details-box w-100">
+                <div class="d-flex justify-content-between align-items-start gap-2 mb-3 pb-3 border-bottom border-secondary-subtle">
+                    <div>
+                        <span class="text-secondary small font-monospace d-block mb-1">${escapeHtml(participant.id)}</span>
+                        <h2 class="participant-name mb-0">${escapeHtml(participant.name)}</h2>
+                    </div>
+                    <span class="badge ${badgeClass} fs-6 px-3 py-2">
+                        ${foodIcon} ${escapeHtml(food)}
+                    </span>
                 </div>
 
-                <div class="detail-row">
-                    <span>Participant ID:</span>
-                    <strong>${escapeHtml(participant.id)}</strong>
-                </div>
+                <div class="details-grid mb-4">
+                    <div class="detail-item">
+                        <span class="detail-label">College / Institution</span>
+                        <span class="detail-val">${escapeHtml(participant.college || "Symposium Delegate")}</span>
+                    </div>
 
-                <div class="detail-row">
-                    <span>College / Institution:</span>
-                        <strong>${escapeHtml(participant.email || "Registered participant")}</strong>
-                </div>
+                    ${participant.email ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-val text-truncate">${escapeHtml(participant.email)}</span>
+                        </div>
+                    ` : ''}
 
-                <div class="detail-row">
-                    <span>Food Preference:</span>
-                    <strong>${escapeHtml(food)}</strong>
+                    <div class="detail-item">
+                        <span class="detail-label">Meal Preference</span>
+                        <span class="detail-val fw-bold ${isVeg ? 'text-success' : 'text-warning'}">${escapeHtml(food)}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-val">
+                            ${isClaimed ?
+                                '<span class="text-danger fw-bold">❌ Already Claimed</span>' :
+                                '<span class="text-success fw-bold">🟢 Eligible for Meal</span>'}
+                        </span>
+                    </div>
                 </div>
 
                 ${isClaimed ? `
-                    <div class="detail-row">
-                        <span>Distribution Time:</span>
-                        <strong>${escapeHtml(participant.claimed_at || participant.claimedAt || "Earlier")}</strong>
+                    <div class="status-banner banner-danger mb-4 text-center">
+                        <div class="banner-title">⚠️ Meal Already Distributed!</div>
+                        <div class="banner-sub">Claimed on: <strong>${escapeHtml(participant.claimed_at || "Earlier")}</strong></div>
                     </div>
 
-                    <div class="food-status already-claimed text-center my-4">
-                        ⚠️ Food Already Claimed!
-                    </div>
-
-                    <button class="btn btn-already-claimed w-100" disabled>
+                    <button class="btn btn-secondary-custom w-100 py-3" disabled>
                         ❌ Meal Already Distributed
                     </button>
 
@@ -289,26 +282,27 @@ document.addEventListener("DOMContentLoaded", function () {
                         📷 Scan Next Participant
                     </button>
                 ` : `
-                    <div class="food-status not-claimed text-center my-4">
-                        🟢 Food Not Claimed (Eligible for Meal)
+                    <div class="status-banner banner-success mb-4 text-center">
+                        <div class="banner-title">✅ Verified Delegate</div>
+                        <div class="banner-sub">Eligible for <strong>${escapeHtml(food)}</strong> Meal Pack</div>
                     </div>
 
-                    <button class="btn btn-claim w-100" id="btnClaimFood" data-id="${escapeHtml(participant.id)}">
-                        🍽️ Claim Food
+                    <button class="btn btn-claim-action w-100 py-3 mb-2" id="btnClaimFood">
+                        🍽️ Distribute Food & Mark Claimed
                     </button>
 
-                    <button class="btn btn-outline-secondary w-100 mt-2" id="btnCancelScan">
-                        Scan Next
+                    <button class="btn btn-outline-secondary w-100" id="btnCancelScan">
+                        Cancel / Scan Next
                     </button>
                 `}
             </div>
         `;
 
-        // Attach action handlers
+        // Wire event handlers
         const claimBtn = document.getElementById("btnClaimFood");
         if (claimBtn) {
             claimBtn.addEventListener("click", function () {
-                claimFood(participant.qr_token);
+                claimFood(participant.qr_token || participant.id);
             });
         }
 
@@ -328,18 +322,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
         playFeedback("success");
 
+        const food = participant.food || "Meal";
+        const isVeg = food.toLowerCase() === "veg";
+
         participantCard.innerHTML = `
-            <div class="claim-success text-center w-100 py-3">
-                <div class="success-icon">✓</div>
-                <h3 class="mb-2">Food Claimed Successfully!</h3>
-                <p>
-                    Meal distributed to <strong>${escapeHtml(participant.name)}</strong> (${escapeHtml(participant.id)})
-                </p>
-                <div class="text-secondary small mb-4">
-                    Meal Type: <strong class="text-white">${escapeHtml(participant.food)}</strong> | Time: <strong class="text-white">${escapeHtml(participant.claimedAt)}</strong>
+            <div class="claim-success-card text-center w-100 py-4">
+                <div class="success-animation-icon mb-3">✓</div>
+                <h3 class="text-white fw-bold mb-1">Food Claimed Successfully!</h3>
+                <p class="text-secondary mb-4">Meal packet has been handed over to delegate.</p>
+
+                <div class="success-summary-box mb-4">
+                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                        <span class="text-secondary">Delegate:</span>
+                        <span class="text-white fw-bold">${escapeHtml(participant.name)} (${escapeHtml(participant.id)})</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                        <span class="text-secondary">Meal Type:</span>
+                        <span class="fw-bold ${isVeg ? 'text-success' : 'text-warning'}">${isVeg ? '🥗 Veg' : '🍗 Non-Veg'}</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2">
+                        <span class="text-secondary">Claimed At:</span>
+                        <span class="text-white">${escapeHtml(participant.claimed_at || "Just now")}</span>
+                    </div>
                 </div>
 
-                <button class="btn btn-scan w-100" id="btnScanNext">
+                <button class="btn btn-primary-custom w-100 py-3" id="btnScanNext">
                     📷 Scan Next Participant
                 </button>
             </div>
@@ -351,116 +358,125 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function escapeHtml(str) {
-        if (!str) return "";
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
 
     /* =====================================================
-       FOOD CLAIMING LOGIC
+       API CALLS: VERIFY & CLAIM
     ===================================================== */
 
-    function getCookie(name) {
-        const cookie = document.cookie.split("; ").find(item => item.startsWith(`${name}=`));
-        return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
+    async function verifyQRCode(rawCode) {
+        const token = rawCode ? rawCode.trim() : (qrInput ? qrInput.value.trim() : "");
+
+        if (!token) {
+            alert("Please scan or enter a valid QR code.");
+            return;
+        }
+
+        if (qrInput) {
+            qrInput.value = token;
+        }
+
+        updateScannerStatus("🔎 Verifying participant ID...", "scanning");
+
+        try {
+            const response = await fetch("/api/verify/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ token: token })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                playFeedback("error");
+                updateScannerStatus(result.error || "Participant not found", "error");
+                renderErrorState(result.error || "Invalid QR Code or Participant Not Found.");
+                return;
+            }
+
+            if (result.valid) {
+                playFeedback("beep");
+                updateScannerStatus("✅ Verified! Ready to serve food.", "active");
+                renderParticipantDetails(result.participant, result.valid, result.message);
+                return;
+            } else {
+                playFeedback("error");
+                updateScannerStatus("⚠️ Food already claimed for this participant", "error");
+            }
+
+            renderParticipantDetails(result.participant, result.valid, result.message);
+
+        } catch (err) {
+            console.error("Verification error:", err);
+            playFeedback("error");
+            updateScannerStatus("Connection error with server", "error");
+            alert("Could not connect to server to verify participant.");
+        }
     }
 
-    async function claimFood(qrToken) {
-        if (!qrToken) {
-            alert("QR token is missing from this participant.");
+    async function claimFood(token) {
+        if (!token) {
+            alert("Token is missing for this claim request.");
             return;
+        }
+
+        const claimBtn = document.getElementById("btnClaimFood");
+        if (claimBtn) {
+            claimBtn.disabled = true;
+            claimBtn.textContent = "Recording Meal Distribution...";
         }
 
         try {
             const response = await fetch("/api/claim/", {
                 method: "POST",
-                headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
-                body: JSON.stringify({ token: qrToken })
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: JSON.stringify({ token: token })
             });
+
             const result = await response.json();
-            if (!response.ok || !result.success) {
-                alert(result.message || result.error || "Unable to claim food.");
-                return;
-            }
-            renderClaimSuccess({
-                name: result.participant.name,
-                id: result.participant.id,
-                food: "Meal",
-                claimed_at: result.participant.claimed_at
-            });
-        } catch (error) {
-            console.error("Claim request failed:", error);
-            alert("Could not connect to the server.");
-        }
-    }
 
-
-    /* =====================================================
-       VERIFY QR CODE (SCAN OR MANUAL INPUT)
-    ===================================================== */
-
-    function verifyQRCode(code) {
-        const qrValue = code ? code.trim() : (qrInput ? qrInput.value.trim() : "");
-
-        if (qrValue === "") {
-            alert("Please scan or enter a QR code.");
-            return;
-        }
-
-        if (qrInput) {
-            qrInput.value = qrValue;
-        }
-
-        updateScannerStatus("Processing QR code...", "scanning");
-
-        fetch("/api/verify/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
-            body: JSON.stringify({ token: qrValue })
-        })
-            .then(response => response.json().then(result => ({ response, result })))
-            .then(({ response, result }) => {
-                if (!response.ok && response.status !== 200) {
-                    throw new Error(result.message || result.error || "Invalid QR code");
+            if (response.ok && result.success) {
+                renderClaimSuccess(result.participant);
+                updateScannerStatus("🎉 Meal distributed successfully!", "active");
+            } else {
+                playFeedback("error");
+                alert(result.message || result.error || "Could not complete food claim.");
+                if (claimBtn) {
+                    claimBtn.disabled = false;
+                    claimBtn.textContent = "🍽️ Distribute Food & Mark Claimed";
                 }
-                const participant = {
-                    ...result.participant,
-                    qr_token: qrValue,
-                    food_claimed: !result.valid,
-                    claimed_at: result.claimed_at
-                };
-                renderParticipantDetails(participant);
-                updateScannerStatus(
-                    result.valid ? "✓ QR verified — Ready to claim food" : "⚠️ Food already claimed for this participant",
-                    result.valid ? "active" : "error"
-                );
-            })
-            .catch(error => {
-                console.error("Verification request failed:", error);
-                updateScannerStatus(error.message, "error");
-                alert(error.message);
-            });
-    }
-
-    if (verifyButton) {
-        verifyButton.addEventListener("click", function () {
-            verifyQRCode();
-        });
-    }
-
-    if (qrInput) {
-        qrInput.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                verifyQRCode();
             }
-        });
+        } catch (err) {
+            console.error("Claim error:", err);
+            alert("Network error while claiming food.");
+            if (claimBtn) {
+                claimBtn.disabled = false;
+                claimBtn.textContent = "🍽️ Distribute Food & Mark Claimed";
+            }
+        }
+    }
+
+    function renderErrorState(errorMessage) {
+        if (!participantCard) return;
+        participantCard.innerHTML = `
+            <div class="participant-empty text-center py-5">
+                <div class="empty-icon mb-3">❌</div>
+                <h4 class="text-danger fw-bold">Verification Failed</h4>
+                <p class="text-secondary mb-4">${escapeHtml(errorMessage)}</p>
+                <button class="btn btn-outline-light btn-sm" id="btnScanNext">
+                    Try Another Code
+                </button>
+            </div>
+        `;
+        const scanNextBtn = document.getElementById("btnScanNext");
+        if (scanNextBtn) {
+            scanNextBtn.addEventListener("click", resetAndScanNext);
+        }
     }
 
 
@@ -470,8 +486,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let html5QrCode = null;
     let isScanning = false;
-    let isProcessingScan = false;
-    let currentFacingMode = "environment"; // Prefer rear camera on mobile
+    let isProcessing = false;
+    let currentFacingMode = "environment";
     let availableCameras = [];
     let currentCameraIndex = 0;
 
@@ -482,8 +498,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initScanner() {
         if (!qrReader || typeof Html5Qrcode === "undefined") {
-            console.error("Html5Qrcode library not loaded or qr-reader element missing.");
-            updateScannerStatus("❌ QR Scanner library unavailable.", "error");
+            updateScannerStatus("❌ Camera scanner library unavailable. Use manual input.", "error");
             return;
         }
 
@@ -497,21 +512,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function startCamera() {
         if (isScanning || !html5QrCode) return;
 
-        updateScannerStatus("📷 Starting camera...", "scanning");
-        isProcessingScan = false;
+        updateScannerStatus("📷 Starting camera viewfinder...", "scanning");
+        isProcessing = false;
 
         const scannerConfig = {
-            fps: 10,
-            qrbox: function (viewfinderWidth, viewfinderHeight) {
-                const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-                const size = Math.floor(minEdge * 0.75);
-                return { width: Math.max(size, 200), height: Math.max(size, 200) };
+            fps: 15,
+            qrbox: function (w, h) {
+                const minEdge = Math.min(w, h);
+                const size = Math.floor(minEdge * 0.72);
+                return { width: Math.max(size, 220), height: Math.max(size, 220) };
             },
             aspectRatio: 1.0
         };
 
-        // Try starting with facingMode first (best for mobile rear camera)
-        const cameraConfig = availableCameras.length > 0 && availableCameras[currentCameraIndex]
+        const cameraConfig = (availableCameras.length > 0 && availableCameras[currentCameraIndex])
             ? availableCameras[currentCameraIndex].id
             : { facingMode: currentFacingMode };
 
@@ -519,45 +533,39 @@ document.addEventListener("DOMContentLoaded", function () {
             cameraConfig,
             scannerConfig,
             onScanSuccess,
-            onScanFailure
+            function () {} // silent frame scanning failures
         ).then(function () {
             isScanning = true;
             qrReader.classList.add("scan-pulse");
-            updateScannerStatus("📷 Scanner active — Point at a QR code", "active");
+            updateScannerStatus("📷 Camera Active — Point at Delegate QR Code", "active");
 
-            // Cache available camera list for switching
+            // Cache camera list for flip toggle
             if (availableCameras.length === 0) {
-                Html5Qrcode.getCameras().then(function (devices) {
-                    if (devices && devices.length > 0) {
-                        availableCameras = devices;
-                    }
-                }).catch(function () {});
+                Html5Qrcode.getCameras().then(devices => {
+                    if (devices && devices.length > 0) availableCameras = devices;
+                }).catch(() => {});
             }
-        }).catch(function (error) {
-            console.warn("First camera start attempt failed, trying fallback:", error);
-            // Fallback to getCameras enumeration
-            Html5Qrcode.getCameras().then(function (devices) {
+        }).catch(function (err) {
+            console.warn("Camera start failed, attempting fallback:", err);
+            Html5Qrcode.getCameras().then(devices => {
                 if (!devices || devices.length === 0) {
-                    updateScannerStatus("❌ No camera found. Use manual input.", "error");
+                    updateScannerStatus("❌ No camera detected. Enter ID manually below.", "error");
                     return;
                 }
                 availableCameras = devices;
-                const fallbackId = devices[0].id;
                 html5QrCode.start(
-                    fallbackId,
+                    devices[0].id,
                     scannerConfig,
                     onScanSuccess,
-                    onScanFailure
-                ).then(function () {
+                    function () {}
+                ).then(() => {
                     isScanning = true;
                     qrReader.classList.add("scan-pulse");
-                    updateScannerStatus("📷 Scanner active — Point at a QR code", "active");
-                }).catch(function (finalErr) {
-                    console.error("Camera access failed:", finalErr);
+                    updateScannerStatus("📷 Camera Active — Point at Delegate QR Code", "active");
+                }).catch(finalErr => {
                     updateScannerStatus("❌ Camera permission denied. Please allow access or use manual input.", "error");
                 });
-            }).catch(function (err) {
-                console.error("Camera list lookup failed:", err);
+            }).catch(() => {
                 updateScannerStatus("❌ Camera access blocked. Use manual QR input below.", "error");
             });
         });
@@ -566,10 +574,10 @@ document.addEventListener("DOMContentLoaded", function () {
     function stopCamera() {
         if (html5QrCode && isScanning) {
             qrReader.classList.remove("scan-pulse");
-            return html5QrCode.stop().then(function () {
+            return html5QrCode.stop().then(() => {
                 isScanning = false;
-            }).catch(function (err) {
-                console.warn("Error stopping scanner:", err);
+            }).catch(err => {
+                console.warn("Stop camera error:", err);
                 isScanning = false;
             });
         }
@@ -577,8 +585,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function onScanSuccess(decodedText) {
-        if (isProcessingScan) return;
-        isProcessingScan = true;
+        if (isProcessing) return;
+        isProcessing = true;
 
         playFeedback("beep");
 
@@ -586,15 +594,11 @@ document.addEventListener("DOMContentLoaded", function () {
             qrInput.value = decodedText;
         }
 
-        updateScannerStatus("✓ QR Code Detected! Verifying...", "active");
+        updateScannerStatus("⚡ QR Detected! Validating...", "active");
 
-        stopCamera().then(function () {
+        stopCamera().then(() => {
             verifyQRCode(decodedText);
         });
-    }
-
-    function onScanFailure(error) {
-        // Continuous search frame error - no action needed
     }
 
     function switchCamera() {
@@ -604,8 +608,8 @@ document.addEventListener("DOMContentLoaded", function () {
             currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
         }
 
-        stopCamera().then(function () {
-            setTimeout(startCamera, 200);
+        stopCamera().then(() => {
+            setTimeout(startCamera, 250);
         });
     }
 
@@ -615,26 +619,45 @@ document.addEventListener("DOMContentLoaded", function () {
             qrInput.value = "";
             qrInput.focus();
         }
-        isProcessingScan = false;
-        stopCamera().then(function () {
+        isProcessing = false;
+        stopCamera().then(() => {
             startCamera();
         });
     }
 
-    // Attach camera control buttons
+    // Camera control buttons
     if (btnSwitchCamera) {
         btnSwitchCamera.addEventListener("click", switchCamera);
     }
 
     if (btnRestartCamera) {
         btnRestartCamera.addEventListener("click", function () {
-            stopCamera().then(function () {
+            stopCamera().then(() => {
                 startCamera();
             });
         });
     }
 
-    // Start scanner automatically on page load
+    if (verifyButton) {
+        verifyButton.addEventListener("click", function () {
+            stopCamera().then(() => {
+                verifyQRCode();
+            });
+        });
+    }
+
+    if (qrInput) {
+        qrInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                stopCamera().then(() => {
+                    verifyQRCode();
+                });
+            }
+        });
+    }
+
+    // Auto initialize scanner on page load
     initScanner();
 
 });

@@ -5,122 +5,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Dashboard - Symposium Food Counter</title>
 
-    <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
 </head>
 
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg dashboard-navbar">
+    <nav class="navbar navbar-expand-lg dashboard-navbar sticky-top">
         <div class="container">
-
-            <a class="navbar-brand" href="{% url 'food:dashboard' %}">
-                🍽️ Symposium Food Counter
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'food:dashboard' %}">
+                <span class="brand-icon">🍽️</span>
+                <span class="brand-title">Symposium Food Counter</span>
             </a>
 
-            <div class="d-flex align-items-center">
-                <span class="admin-text me-3">
-                    {% if user.is_authenticated %}{{ user.username }}{% else %}Admin{% endif %}
-                </span>
+            <div class="d-flex align-items-center gap-3">
+                {% if is_supabase_active %}
+                    <span class="badge bg-success-subtle text-success border border-success-subtle d-none d-md-inline-block px-2 py-1">
+                        ● Cloud Sync Active
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary-subtle text-light border border-secondary-subtle d-none d-md-inline-block px-2 py-1">
+                        ● Local Storage Mode
+                    </span>
+                {% endif %}
 
-                <a href="{% url 'food:logout' %}" class="btn btn-outline-light btn-sm">
+                <div class="user-pill d-flex align-items-center gap-2">
+                    <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    <span class="user-name text-truncate d-none d-sm-inline">{{ user.username }}</span>
+                </div>
+
+                <a href="{% url 'food:logout' %}" class="btn btn-outline-danger btn-sm px-3">
                     Logout
                 </a>
             </div>
-
         </div>
     </nav>
 
-
     <!-- Main Dashboard -->
-    <main class="container py-5">
+    <main class="container py-4 py-lg-5">
 
-        <!-- Welcome Section -->
-        <div class="dashboard-header mb-5">
-            <p class="dashboard-label mb-2">ADMIN PANEL</p>
+        <!-- Flash Messages -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show d-flex align-items-center justify-content-between" role="alert">
+                        <div>{{ message }}</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-            <h1>Food Distribution Dashboard</h1>
-
-            <p class="text-secondary">
-                Manage and track participant food distribution efficiently.
-            </p>
+        <!-- Header & Action Row -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <div class="dashboard-tag">ADMIN CONTROL CENTER</div>
+                <h1 class="dashboard-title">Food Distribution Dashboard</h1>
+                <p class="dashboard-subtitle mb-0">Track real-time meal claims, scan QR tokens, and manage delegate lists.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'food:scanner' %}" class="btn btn-primary-custom">
+                    📷 Launch QR Scanner
+                </a>
+            </div>
         </div>
 
-
         <!-- Statistics Cards -->
-        <div class="row g-4 mb-5">
-
+        <div class="row g-3 g-lg-4 mb-5">
             <!-- Total Participants -->
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <p>Total Participants</p>
-                    <h2 id="totalParticipantsCount">{{ total }}</h2>
-                    <span>Registered participants</span>
+            <div class="col-12 col-md-4">
+                <div class="stats-card stat-total">
+                    <div class="stat-header">
+                        <span class="stat-label">Total Participants</span>
+                        <span class="stat-icon">👥</span>
+                    </div>
+                    <div class="stat-number" id="totalParticipantsCount">{{ total }}</div>
+                    <div class="stat-breakdown">
+                        <span><strong class="text-success">{{ veg_total }}</strong> Veg</span>
+                        <span class="dot-separator">•</span>
+                        <span><strong class="text-warning">{{ non_veg_total }}</strong> Non-Veg</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Food Claimed -->
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <p>Food Claimed</p>
-                    <h2 id="foodClaimedCount">{{ claimed }}</h2>
-                    <span>Successfully distributed</span>
+            <div class="col-12 col-md-4">
+                <div class="stats-card stat-claimed">
+                    <div class="stat-header">
+                        <span class="stat-label">Food Distributed</span>
+                        <span class="stat-icon">✅</span>
+                    </div>
+                    <div class="stat-number text-success" id="foodClaimedCount">{{ claimed }}</div>
+                    <div class="stat-breakdown">
+                        <span><strong>{{ veg_claimed }}</strong> Veg Served</span>
+                        <span class="dot-separator">•</span>
+                        <span><strong>{{ non_veg_claimed }}</strong> Non-Veg Served</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Pending -->
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <p>Pending</p>
-                    <h2 id="pendingFoodCount">{{ unclaimed }}</h2>
-                    <span>Food yet to be collected</span>
+            <div class="col-12 col-md-4">
+                <div class="stats-card stat-pending">
+                    <div class="stat-header">
+                        <span class="stat-label">Pending Collection</span>
+                        <span class="stat-icon">⏳</span>
+                    </div>
+                    <div class="stat-number text-warning" id="pendingFoodCount">{{ unclaimed }}</div>
+                    <div class="stat-breakdown">
+                        <span>Meals waiting to be collected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participant Directory & Live Table -->
+        <div class="content-card mb-5">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+                <div>
+                    <h3 class="card-heading mb-1">Delegate Food Roster</h3>
+                    <p class="card-subheading mb-0">Search by ID, name, or institution to verify claim status.</p>
+                </div>
+
+                <!-- Table Controls -->
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="tableSearchInput" class="form-control form-control-sm" placeholder="Search participant...">
+                    </div>
+
+                    <div class="btn-group btn-group-sm filter-btn-group" role="group" aria-label="Filter status">
+                        <button type="button" class="btn filter-btn active" data-filter="all">All</button>
+                        <button type="button" class="btn filter-btn" data-filter="claimed">Claimed</button>
+                        <button type="button" class="btn filter-btn" data-filter="pending">Pending</button>
+                    </div>
                 </div>
             </div>
 
-        </div>
-
-
-        <!-- Scanner Action -->
-        <div class="scanner-action-card text-center">
-
-            <div class="scanner-icon mb-3">
-                📷
+            <!-- Table Container -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle custom-table" id="participantsTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Participant ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">College / Dept</th>
+                            <th scope="col">Food Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Distribution Time</th>
+                            <th scope="col" class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in participants %}
+                            <tr class="participant-row" data-status="{% if p.food_claimed %}claimed{% else %}pending{% endif %}" data-food="{{ p.food_preference|lower }}">
+                                <td class="fw-bold text-light font-monospace">{{ p.participant_id }}</td>
+                                <td>
+                                    <div class="fw-semibold text-white">{{ p.name }}</div>
+                                    {% if p.email %}<small class="text-secondary">{{ p.email }}</small>{% endif %}
+                                </td>
+                                <td>
+                                    <span class="text-secondary">{{ p.college|default:"Symposium Delegate" }}</span>
+                                </td>
+                                <td>
+                                    {% if p.food_preference == 'Non-Veg' %}
+                                        <span class="badge badge-nonveg">🍗 Non-Veg</span>
+                                    {% else %}
+                                        <span class="badge badge-veg">🥗 Veg</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if p.food_claimed %}
+                                        <span class="badge badge-claimed">Claimed</span>
+                                    {% else %}
+                                        <span class="badge badge-pending">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-secondary small">
+                                    {% if p.food_claimed and p.claimed_at %}
+                                        {{ p.claimed_at|date:"h:i A, d M" }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if not p.food_claimed %}
+                                        <button type="button" class="btn btn-sm btn-quick-claim" data-token="{{ p.qr_token }}" data-name="{{ p.name }}">
+                                            Distribute
+                                        </button>
+                                    {% else %}
+                                        <span class="text-success small fw-semibold">✓ Served</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr id="emptyTableRow">
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <div class="empty-icon mb-2">📋</div>
+                                        <h5>No Participants Registered Yet</h5>
+                                        <p class="text-secondary small mb-3">Upload an Excel or CSV file to populate the food distribution roster.</p>
+                                        <button type="button" class="btn btn-secondary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+                                            📥 Import Participants List
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-
-            <h3>Ready to Distribute Food?</h3>
-
-            <p>
-                Scan a participant's QR code to verify their details
-                and claim their food.
-            </p>
-
-            <a href="{% url 'food:scanner' %}" class="btn btn-scan">
-                Scan QR Code
-            </a>
-
         </div>
 
     </main>
 
-
-    <!-- Bootstrap JS -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
-
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="{% static 'js/script.js' %}?v=2"></script>
-
 </body>
 
 </html>
