@@ -364,3 +364,6 @@ WARNING 2026-08-25 13:03:26,611 log "POST /api/claim/ HTTP/1.1" 400 53
 INFO 2026-08-25 13:04:35,027 log "GET /dashboard/ HTTP/1.1" 200 3144
 INFO 2026-08-26 17:07:47,389 autoreload Watching for file changes with StatReloader
 INFO 2026-08-26 17:12:49,378 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\symposium\settings.py changed, reloading.
+INFO 2026-08-26 17:12:49,990 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 17:13:47,334 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\manage.py changed, reloading.
+INFO 2026-08-26 17:13:48,729 autoreload Watching for file changes with StatReloader
