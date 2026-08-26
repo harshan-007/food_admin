@@ -115,6 +115,9 @@ SUPABASE_QR_BUCKET = os.getenv('SUPABASE_QR_BUCKET', 'qr-codes')
 SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
 
 # Logging Configuration
+LOG_DIR = BASE_DIR / 'logs'
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -128,7 +131,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'symposium.log',
+            'filename': LOG_DIR / 'symposium.log',
             'formatter': 'verbose',
         },
     },

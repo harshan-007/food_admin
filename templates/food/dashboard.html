@@ -87,11 +87,6 @@
                         <span class="stat-icon">👥</span>
                     </div>
                     <div class="stat-number" id="totalParticipantsCount">{{ total }}</div>
-                    <div class="stat-breakdown">
-                        <span><strong class="text-success">{{ veg_total }}</strong> Veg</span>
-                        <span class="dot-separator">•</span>
-                        <span><strong class="text-warning">{{ non_veg_total }}</strong> Non-Veg</span>
-                    </div>
                 </div>
             </div>
 
@@ -103,11 +98,6 @@
                         <span class="stat-icon">✅</span>
                     </div>
                     <div class="stat-number text-success" id="foodClaimedCount">{{ claimed }}</div>
-                    <div class="stat-breakdown">
-                        <span><strong>{{ veg_claimed }}</strong> Veg Served</span>
-                        <span class="dot-separator">•</span>
-                        <span><strong>{{ non_veg_claimed }}</strong> Non-Veg Served</span>
-                    </div>
                 </div>
             </div>
 
@@ -119,9 +109,6 @@
                         <span class="stat-icon">⏳</span>
                     </div>
                     <div class="stat-number text-warning" id="pendingFoodCount">{{ unclaimed }}</div>
-                    <div class="stat-breakdown">
-                        <span>Meals waiting to be collected</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -150,14 +137,13 @@
             </div>
 
             <!-- Table Container -->
-            <div class="table-responsive">
+            <div class="table-responsive participant-table-scroll">
                 <table class="table table-hover align-middle custom-table" id="participantsTable">
                     <thead>
                         <tr>
                             <th scope="col">Participant ID</th>
                             <th scope="col">Name</th>
                             <th scope="col">College / Dept</th>
-                            <th scope="col">Food Type</th>
                             <th scope="col">Status</th>
                             <th scope="col">Distribution Time</th>
                             <th scope="col" class="text-end">Action</th>
@@ -165,7 +151,7 @@
                     </thead>
                     <tbody>
                         {% for p in participants %}
-                            <tr class="participant-row" data-status="{% if p.food_claimed %}claimed{% else %}pending{% endif %}" data-food="{{ p.food_preference|lower }}">
+                            <tr class="participant-row" data-status="{% if p.food_claimed %}claimed{% else %}pending{% endif %}">
                                 <td class="fw-bold text-light font-monospace">{{ p.participant_id }}</td>
                                 <td>
                                     <div class="fw-semibold text-white">{{ p.name }}</div>
@@ -173,13 +159,6 @@
                                 </td>
                                 <td>
                                     <span class="text-secondary">{{ p.college|default:"Symposium Delegate" }}</span>
-                                </td>
-                                <td>
-                                    {% if p.food_preference == 'Non-Veg' %}
-                                        <span class="badge badge-nonveg">🍗 Non-Veg</span>
-                                    {% else %}
-                                        <span class="badge badge-veg">🥗 Veg</span>
-                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if p.food_claimed %}
@@ -190,7 +169,7 @@
                                 </td>
                                 <td class="text-secondary small">
                                     {% if p.food_claimed and p.claimed_at %}
-                                        {{ p.claimed_at|date:"h:i A, d M" }}
+                                        {{ p.claimed_at_display }}
                                     {% else %}
                                         —
                                     {% endif %}
@@ -207,7 +186,7 @@
                             </tr>
                         {% empty %}
                             <tr id="emptyTableRow">
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="6" class="text-center py-5">
                                     <div class="empty-state">
                                         <div class="empty-icon mb-2">📋</div>
                                         <h5>No Participants Registered Yet</h5>

@@ -163,12 +163,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         const row = btn.closest("tr");
                         if (row) {
                             row.setAttribute("data-status", "claimed");
-                            const statusTd = row.children[4];
-                            const timeTd = row.children[5];
-                            const actionTd = row.children[6];
+                            const statusTd = row.children[3];
+                            const timeTd = row.children[4];
+                            const actionTd = row.children[5];
 
                             if (statusTd) statusTd.innerHTML = '<span class="badge badge-claimed">Claimed</span>';
-                            if (timeTd) timeTd.textContent = result.participant.claimed_at || "Just now";
+                            if (timeTd) timeTd.textContent = result.participant.claimed_at_display || "Just now";
                             if (actionTd) actionTd.innerHTML = '<span class="text-success small fw-semibold">✓ Served</span>';
                         }
                         // Refresh stats in dashboard cards
@@ -223,10 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!participantCard) return;
 
         const isClaimed = participant.food_claimed;
-        const food = participant.food || "Veg";
-        const isVeg = food.toLowerCase() === "veg";
-        const badgeClass = isVeg ? "badge-veg" : "badge-nonveg";
-        const foodIcon = isVeg ? "🥗" : "🍗";
 
         participantCard.innerHTML = `
             <div class="participant-details-box w-100">
@@ -235,9 +231,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         <span class="text-secondary small font-monospace d-block mb-1">${escapeHtml(participant.id)}</span>
                         <h2 class="participant-name mb-0">${escapeHtml(participant.name)}</h2>
                     </div>
-                    <span class="badge ${badgeClass} fs-6 px-3 py-2">
-                        ${foodIcon} ${escapeHtml(food)}
-                    </span>
                 </div>
 
                 <div class="details-grid mb-4">
@@ -252,11 +245,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             <span class="detail-val text-truncate">${escapeHtml(participant.email)}</span>
                         </div>
                     ` : ''}
-
-                    <div class="detail-item">
-                        <span class="detail-label">Meal Preference</span>
-                        <span class="detail-val fw-bold ${isVeg ? 'text-success' : 'text-warning'}">${escapeHtml(food)}</span>
-                    </div>
 
                     <div class="detail-item">
                         <span class="detail-label">Status</span>
@@ -284,12 +272,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 ` : `
                     <div class="status-banner banner-success mb-4 text-center">
                         <div class="banner-title">✅ Verified Delegate</div>
-                        <div class="banner-sub">Eligible for <strong>${escapeHtml(food)}</strong> Meal Pack</div>
+                        <div class="banner-sub">Eligible for meal distribution</div>
                     </div>
-
-                    <button class="btn btn-claim-action w-100 py-3 mb-2" id="btnClaimFood">
-                        🍽️ Distribute Food & Mark Claimed
-                    </button>
 
                     <button class="btn btn-outline-secondary w-100" id="btnCancelScan">
                         Cancel / Scan Next
@@ -299,13 +283,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
 
         // Wire event handlers
-        const claimBtn = document.getElementById("btnClaimFood");
-        if (claimBtn) {
-            claimBtn.addEventListener("click", function () {
-                claimFood(participant.qr_token || participant.id);
-            });
-        }
-
         const scanNextBtn = document.getElementById("btnScanNext");
         if (scanNextBtn) {
             scanNextBtn.addEventListener("click", resetAndScanNext);
@@ -322,9 +299,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         playFeedback("success");
 
-        const food = participant.food || "Meal";
-        const isVeg = food.toLowerCase() === "veg";
-
         participantCard.innerHTML = `
             <div class="claim-success-card text-center w-100 py-4">
                 <div class="success-animation-icon mb-3">✓</div>
@@ -335,10 +309,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
                         <span class="text-secondary">Delegate:</span>
                         <span class="text-white fw-bold">${escapeHtml(participant.name)} (${escapeHtml(participant.id)})</span>
-                    </div>
-                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
-                        <span class="text-secondary">Meal Type:</span>
-                        <span class="fw-bold ${isVeg ? 'text-success' : 'text-warning'}">${isVeg ? '🥗 Veg' : '🍗 Non-Veg'}</span>
                     </div>
                     <div class="d-flex justify-content-between py-2">
                         <span class="text-secondary">Claimed At:</span>
@@ -398,14 +368,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (result.valid) {
                 playFeedback("beep");
-                updateScannerStatus("✅ Verified! Ready to serve food.", "active");
-                renderParticipantDetails(result.participant, result.valid, result.message);
+                updateScannerStatus("✅ Verified! Recording meal distribution...", "active");
+                claimFood(result.participant.qr_token || token);
                 return;
             } else {
                 playFeedback("error");
-                updateScannerStatus("⚠️ Food already claimed for this participant", "error");
+                updateScannerStatus("⚠️ Food already claimed", "error");
             }
 
+            result.participant.food_claimed = result.claimed;
+            result.participant.claimed_at = result.claimed_at;
             renderParticipantDetails(result.participant, result.valid, result.message);
 
         } catch (err) {

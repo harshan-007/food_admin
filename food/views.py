@@ -1,12 +1,27 @@
 import os
+from datetime import datetime
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.utils import timezone
 import json
 from symposium.supabase_config import get_supabase
+
+
+def format_claimed_at(value):
+    if not value:
+        return None
+
+    try:
+        claimed_at = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
+        if timezone.is_naive(claimed_at):
+            claimed_at = timezone.make_aware(claimed_at, timezone.get_current_timezone())
+        return timezone.localtime(claimed_at).strftime('%I:%M %p, %d %b')
+    except (TypeError, ValueError):
+        return str(value)
 
 
 def get_claim_for_participant(supabase, participant_id):
@@ -70,6 +85,7 @@ def dashboard(request):
         claim = claims_by_participant.get(participant.get('id'))
         participant['food_claimed'] = claim is not None
         participant['claimed_at'] = claim.get('claimed_at') if claim else None
+        participant['claimed_at_display'] = format_claimed_at(participant['claimed_at'])
 
     total = len(participants)
     claimed = sum(participant['food_claimed'] for participant in participants)
@@ -131,6 +147,7 @@ def verify_qr(request):
             'claimed': True,
             'message': 'Food already claimed',
             'claimed_at': claim.get('claimed_at'),
+            'claimed_at_display': format_claimed_at(claim.get('claimed_at')),
             'participant': {
                 'id': participant['id'],
                 'name': participant['name'],
@@ -181,8 +198,7 @@ def claim_food(request):
             'message': 'Food already claimed',
         }, status=400)
 
-    from datetime import datetime
-    claimed_at = datetime.now().isoformat()
+    claimed_at = timezone.localtime(timezone.now()).isoformat()
     supabase.table('claims').insert({
         'participant_id': participant['id'],
         'claimed_by_admin': request.user.username,
@@ -197,5 +213,6 @@ def claim_food(request):
             'name': participant['name'],
             'email': participant.get('email'),
             'claimed_at': claimed_at,
+            'claimed_at_display': format_claimed_at(claimed_at),
         },
     })
