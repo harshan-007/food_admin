@@ -108,6 +108,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email settings (for future use - optional)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+BREVO_API_KEY = os.getenv('BREVO_API_KEY', '')
+BREVO_SENDER_EMAIL = os.getenv('BREVO_SENDER_EMAIL', '')
+BREVO_SENDER_NAME = os.getenv('BREVO_SENDER_NAME', 'Symposium Food Counter')
+SUPABASE_QR_BUCKET = os.getenv('SUPABASE_QR_BUCKET', 'qr-codes')
+SUPABASE_SERVICE_ROLE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
 
 # Logging Configuration
 LOGGING = {

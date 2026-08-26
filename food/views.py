@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -5,6 +7,25 @@ from django.contrib import messages
 from django.http import JsonResponse
 import json
 from symposium.supabase_config import get_supabase
+
+
+def get_claim_for_participant(supabase, participant_id):
+    response = supabase.table('claims').select(
+        'claimed_at'
+    ).eq('participant_id', participant_id).limit(1).execute()
+    return response.data[0] if response.data else None
+
+
+def get_participant_for_code(supabase, code):
+    response = supabase.table('participants').select('*').eq(
+        'qr_token', str(code)
+    ).execute()
+    if not response.data:
+        response = supabase.table('participants').select('*').eq(
+            'manual_code', str(code)
+        ).execute()
+    return response.data[0] if response.data else None
+
 
 # ========== AUTHENTICATION ==========
 
@@ -36,19 +57,41 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     supabase = get_supabase()
-    
+
     # Get all participants
     response = supabase.table("participants").select("*").execute()
     participants = response.data
-    
+
+    claims = supabase.table('claims').select('participant_id, claimed_at').execute().data
+    claims_by_participant = {
+        claim['participant_id']: claim for claim in claims
+    }
+    for participant in participants:
+        claim = claims_by_participant.get(participant.get('id'))
+        participant['food_claimed'] = claim is not None
+        participant['claimed_at'] = claim.get('claimed_at') if claim else None
+
     total = len(participants)
-    claimed = len([p for p in participants if p.get('food_claimed')])
+    claimed = sum(participant['food_claimed'] for participant in participants)
     unclaimed = total - claimed
+    veg_participants = [
+        participant for participant in participants
+        if str(participant.get('food_preference', '')).lower() == 'veg'
+    ]
+    non_veg_participants = [
+        participant for participant in participants
+        if str(participant.get('food_preference', '')).lower() != 'veg'
+    ]
     
     context = {
         'total': total,
         'claimed': claimed,
         'unclaimed': unclaimed,
+        'veg_total': len(veg_participants),
+        'non_veg_total': len(non_veg_participants),
+        'veg_claimed': sum(participant['food_claimed'] for participant in veg_participants),
+        'non_veg_claimed': sum(participant['food_claimed'] for participant in non_veg_participants),
+        'is_supabase_active': bool(os.getenv('SUPABASE_URL') and os.getenv('SUPABASE_KEY')),
         'participants': participants,
     }
     return render(request, 'food/dashboard.html', context)
@@ -69,7 +112,7 @@ def verify_qr(request):
     
     try:
         data = json.loads(request.body)
-        token = data.get('token')
+        token = data.get('token') or data.get('manual_code')
     except:
         return JsonResponse({'error': 'Invalid data'}, status=400)
     
@@ -77,27 +120,36 @@ def verify_qr(request):
         return JsonResponse({'error': 'Token required'}, status=400)
     
     supabase = get_supabase()
-    response = supabase.table("participants").select("*").eq("qr_token", token).execute()
-    
-    if not response.data:
+    participant = get_participant_for_code(supabase, token)
+    if not participant:
         return JsonResponse({'error': 'Invalid QR code'}, status=404)
     
-    participant = response.data[0]
-    
-    if participant.get('food_claimed'):
+    claim = get_claim_for_participant(supabase, participant['id'])
+    if claim:
         return JsonResponse({
             'valid': False,
+            'claimed': True,
             'message': 'Food already claimed',
-            'claimed_at': participant.get('claimed_at'),
+            'claimed_at': claim.get('claimed_at'),
+            'participant': {
+                'id': participant['id'],
+                'name': participant['name'],
+                'email': participant.get('email'),
+                'qr_token': participant.get('qr_token'),
+                'manual_code': participant.get('manual_code'),
+            },
         })
-    
+
     return JsonResponse({
         'valid': True,
+        'claimed': False,
         'message': 'Valid QR code',
         'participant': {
             'id': participant['id'],
             'name': participant['name'],
             'email': participant['email'],
+            'qr_token': participant.get('qr_token'),
+            'manual_code': participant.get('manual_code'),
         }
     })
 
@@ -109,7 +161,7 @@ def claim_food(request):
     
     try:
         data = json.loads(request.body)
-        token = data.get('token')
+        token = data.get('token') or data.get('manual_code')
     except:
         return JsonResponse({'error': 'Invalid data'}, status=400)
     
@@ -119,35 +171,23 @@ def claim_food(request):
     supabase = get_supabase()
     
     # Get participant
-    response = supabase.table("participants").select("*").eq("qr_token", token).execute()
-    
-    if not response.data:
+    participant = get_participant_for_code(supabase, token)
+    if not participant:
         return JsonResponse({'error': 'Invalid QR code'}, status=404)
     
-    participant = response.data[0]
-    
-    if participant.get('food_claimed'):
+    if get_claim_for_participant(supabase, participant['id']):
         return JsonResponse({
             'success': False,
             'message': 'Food already claimed',
         }, status=400)
-    
-    # Update participant
+
     from datetime import datetime
-    update_data = {
-        'food_claimed': True,
-        'claimed_at': datetime.now().isoformat(),
-    }
-    
-    supabase.table("participants").update(update_data).eq("id", participant['id']).execute()
-    
-    # Log claim (optional)
-    claim_data = {
+    claimed_at = datetime.now().isoformat()
+    supabase.table('claims').insert({
         'participant_id': participant['id'],
         'claimed_by_admin': request.user.username,
-        'claimed_at': datetime.now().isoformat(),
-    }
-    supabase.table("claims").insert(claim_data).execute()
+        'claimed_at': claimed_at,
+    }).execute()
     
     return JsonResponse({
         'success': True,
@@ -156,6 +196,6 @@ def claim_food(request):
             'id': participant['id'],
             'name': participant['name'],
             'email': participant.get('email'),
-            'claimed_at': update_data['claimed_at'],
+            'claimed_at': claimed_at,
         },
     })
