@@ -16,11 +16,20 @@ def format_claimed_at(value):
         return None
 
     try:
-        claimed_at = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
+        if isinstance(value, str):
+            claimed_at = datetime.fromisoformat(value.replace('Z', '+00:00'))
+        elif isinstance(value, datetime):
+            claimed_at = value
+        else:
+            return str(value)
+
+        ist_tz = timezone.get_fixed_timezone(330)  # IST (UTC+05:30)
         if timezone.is_naive(claimed_at):
-            claimed_at = timezone.make_aware(claimed_at, timezone.get_current_timezone())
-        return timezone.localtime(claimed_at).strftime('%I:%M %p, %d %b')
-    except (TypeError, ValueError):
+            claimed_at = timezone.make_aware(claimed_at, ist_tz)
+        else:
+            claimed_at = claimed_at.astimezone(ist_tz)
+        return claimed_at.strftime('%I:%M %p, %d %b %Y')
+    except (TypeError, ValueError, Exception):
         return str(value)
 
 
@@ -32,14 +41,51 @@ def get_claim_for_participant(supabase, participant_id):
 
 
 def get_participant_for_code(supabase, code):
-    response = supabase.table('participants').select('*').eq(
-        'qr_token', str(code)
-    ).execute()
-    if not response.data:
+    code_str = str(code).strip()
+    if not code_str:
+        return None
+
+    # Check participant_id
+    try:
         response = supabase.table('participants').select('*').eq(
-            'manual_code', str(code)
+            'participant_id', code_str
         ).execute()
-    return response.data[0] if response.data else None
+        if response.data:
+            return response.data[0]
+    except Exception:
+        pass
+
+    # Check id (uuid or integer id)
+    try:
+        response = supabase.table('participants').select('*').eq(
+            'id', code_str
+        ).execute()
+        if response.data:
+            return response.data[0]
+    except Exception:
+        pass
+
+    # Check qr_token
+    try:
+        response = supabase.table('participants').select('*').eq(
+            'qr_token', code_str
+        ).execute()
+        if response.data:
+            return response.data[0]
+    except Exception:
+        pass
+
+    # Check manual_code
+    try:
+        response = supabase.table('participants').select('*').eq(
+            'manual_code', code_str
+        ).execute()
+        if response.data:
+            return response.data[0]
+    except Exception:
+        pass
+
+    return None
 
 
 # ========== AUTHENTICATION ==========
@@ -86,6 +132,7 @@ def dashboard(request):
         participant['food_claimed'] = claim is not None
         participant['claimed_at'] = claim.get('claimed_at') if claim else None
         participant['claimed_at_display'] = format_claimed_at(participant['claimed_at'])
+        participant['display_id'] = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
 
     total = len(participants)
     claimed = sum(participant['food_claimed'] for participant in participants)
@@ -122,51 +169,58 @@ def scanner(request):
 
 @login_required
 def verify_qr(request):
-    """Verify QR token"""
+    """Verify QR token or Participant ID"""
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=400)
     
     try:
         data = json.loads(request.body)
-        token = data.get('token') or data.get('manual_code')
+        token = data.get('token') or data.get('participant_id') or data.get('manual_code')
     except:
         return JsonResponse({'error': 'Invalid data'}, status=400)
     
     if not token:
-        return JsonResponse({'error': 'Token required'}, status=400)
+        return JsonResponse({'error': 'Participant ID or QR code required'}, status=400)
     
     supabase = get_supabase()
     participant = get_participant_for_code(supabase, token)
     if not participant:
-        return JsonResponse({'error': 'Invalid QR code'}, status=404)
+        return JsonResponse({'error': 'Participant not found with given ID/code'}, status=404)
     
+    display_id = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
     claim = get_claim_for_participant(supabase, participant['id'])
     if claim:
+        claimed_at_raw = claim.get('claimed_at')
+        claimed_at_ist = format_claimed_at(claimed_at_raw)
         return JsonResponse({
             'valid': False,
             'claimed': True,
-            'message': 'Food already claimed',
-            'claimed_at': claim.get('claimed_at'),
-            'claimed_at_display': format_claimed_at(claim.get('claimed_at')),
+            'message': 'Warning: Meal already claimed by this participant!',
+            'claimed_at': claimed_at_raw,
+            'claimed_at_display': claimed_at_ist,
             'participant': {
-                'id': participant['id'],
-                'name': participant['name'],
+                'id': display_id,
+                'name': participant.get('name'),
                 'email': participant.get('email'),
                 'qr_token': participant.get('qr_token'),
                 'manual_code': participant.get('manual_code'),
+                'participant_id': display_id,
+                'claimed_at': claimed_at_raw,
+                'claimed_at_display': claimed_at_ist,
             },
         })
 
     return JsonResponse({
         'valid': True,
         'claimed': False,
-        'message': 'Valid QR code',
+        'message': 'Valid participant',
         'participant': {
-            'id': participant['id'],
-            'name': participant['name'],
-            'email': participant['email'],
+            'id': display_id,
+            'name': participant.get('name'),
+            'email': participant.get('email'),
             'qr_token': participant.get('qr_token'),
             'manual_code': participant.get('manual_code'),
+            'participant_id': display_id,
         }
     })
 
@@ -178,24 +232,24 @@ def claim_food(request):
     
     try:
         data = json.loads(request.body)
-        token = data.get('token') or data.get('manual_code')
+        token = data.get('token') or data.get('participant_id') or data.get('manual_code')
     except:
         return JsonResponse({'error': 'Invalid data'}, status=400)
     
     if not token:
-        return JsonResponse({'error': 'Token required'}, status=400)
+        return JsonResponse({'error': 'Participant ID or QR code required'}, status=400)
     
     supabase = get_supabase()
     
     # Get participant
     participant = get_participant_for_code(supabase, token)
     if not participant:
-        return JsonResponse({'error': 'Invalid QR code'}, status=404)
+        return JsonResponse({'error': 'Participant not found'}, status=404)
     
     if get_claim_for_participant(supabase, participant['id']):
         return JsonResponse({
             'success': False,
-            'message': 'Food already claimed',
+            'message': 'Warning: Meal already claimed by this participant!',
         }, status=400)
 
     claimed_at = timezone.localtime(timezone.now()).isoformat()
@@ -205,13 +259,16 @@ def claim_food(request):
         'claimed_at': claimed_at,
     }).execute()
     
+    display_id = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
     return JsonResponse({
         'success': True,
-        'message': f'Food claimed for {participant["name"]}',
+        'message': f'Food distributed to {participant["name"]}',
         'participant': {
-            'id': participant['id'],
-            'name': participant['name'],
+            'id': display_id,
+            'name': participant.get('name'),
             'email': participant.get('email'),
+            'manual_code': participant.get('manual_code'),
+            'participant_id': display_id,
             'claimed_at': claimed_at,
             'claimed_at_display': format_claimed_at(claimed_at),
         },

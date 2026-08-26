@@ -603,6 +603,12 @@ body {
     color: #f87171;
 }
 
+.banner-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+}
+
 .banner-title {
     font-weight: 700;
     font-size: 1rem;

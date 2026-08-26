@@ -12,7 +12,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
 </head>
 
 <body>
@@ -68,7 +68,7 @@
             <div>
                 <div class="dashboard-tag">ADMIN CONTROL CENTER</div>
                 <h1 class="dashboard-title">Food Distribution Dashboard</h1>
-                <p class="dashboard-subtitle mb-0">Track real-time meal claims, scan QR tokens, and manage delegate lists.</p>
+                <p class="dashboard-subtitle mb-0">Track real-time meal claims, scan QR codes, and manage delegate lists.</p>
             </div>
             <div class="d-flex flex-wrap gap-2">
                 <a href="{% url 'food:scanner' %}" class="btn btn-primary-custom">
@@ -118,7 +118,7 @@
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
                 <div>
                     <h3 class="card-heading mb-1">Delegate Food Roster</h3>
-                    <p class="card-subheading mb-0">Search by ID, name, or institution to verify claim status.</p>
+                    <p class="card-subheading mb-0">Search by Participant ID or name to verify claim status.</p>
                 </div>
 
                 <!-- Table Controls -->
@@ -143,22 +143,17 @@
                         <tr>
                             <th scope="col">Participant ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">College / Dept</th>
                             <th scope="col">Status</th>
                             <th scope="col">Distribution Time</th>
-                            <th scope="col" class="text-end">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for p in participants %}
                             <tr class="participant-row" data-status="{% if p.food_claimed %}claimed{% else %}pending{% endif %}">
-                                <td class="fw-bold text-light font-monospace">{{ p.participant_id }}</td>
+                                <td class="fw-bold text-light font-monospace">{{ p.display_id }}</td>
                                 <td>
                                     <div class="fw-semibold text-white">{{ p.name }}</div>
                                     {% if p.email %}<small class="text-secondary">{{ p.email }}</small>{% endif %}
-                                </td>
-                                <td>
-                                    <span class="text-secondary">{{ p.college|default:"Symposium Delegate" }}</span>
                                 </td>
                                 <td>
                                     {% if p.food_claimed %}
@@ -174,19 +169,10 @@
                                         —
                                     {% endif %}
                                 </td>
-                                <td class="text-end">
-                                    {% if not p.food_claimed %}
-                                        <button type="button" class="btn btn-sm btn-quick-claim" data-token="{{ p.qr_token }}" data-name="{{ p.name }}">
-                                            Distribute
-                                        </button>
-                                    {% else %}
-                                        <span class="text-success small fw-semibold">✓ Served</span>
-                                    {% endif %}
-                                </td>
                             </tr>
                         {% empty %}
                             <tr id="emptyTableRow">
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="4" class="text-center py-5">
                                     <div class="empty-state">
                                         <div class="empty-icon mb-2">📋</div>
                                         <h5>No Participants Registered Yet</h5>
@@ -208,7 +194,7 @@
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="{% static 'js/script.js' %}?v=2"></script>
+    <script src="{% static 'js/script.js' %}?v=4"></script>
 </body>
 
 </html>
