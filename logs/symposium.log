@@ -1,0 +1,366 @@
+INFO 2026-08-25 00:12:38,161 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 00:12:41,484 log "GET / HTTP/1.1" 200 3138
+INFO 2026-08-25 00:12:42,296 log "GET /static/css/style.css HTTP/1.1" 200 11884
+INFO 2026-08-25 00:12:42,298 log "GET /static/js/script.js HTTP/1.1" 200 21516
+INFO 2026-08-25 00:12:50,408 log "GET /scanner/ HTTP/1.1" 200 5580
+INFO 2026-08-25 00:13:31,423 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 00:13:36,663 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:13:36,673 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:13:53,773 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:13:53,779 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 00:13:56,344 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:13:56,349 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:14:01,364 log "POST /login/ HTTP/1.1" 200 2826
+INFO 2026-08-25 00:14:15,428 log "POST /login/ HTTP/1.1" 200 2826
+INFO 2026-08-25 00:14:26,193 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:14:26,200 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 00:16:12,592 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 00:26:21,624 log "GET /admin/ HTTP/1.1" 200 6194
+INFO 2026-08-25 00:26:21,775 log "GET /static/admin/css/base.css HTTP/1.1" 200 24538
+INFO 2026-08-25 00:26:21,795 log "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 3583
+INFO 2026-08-25 00:26:21,801 log "GET /static/admin/js/theme.js HTTP/1.1" 200 1708
+INFO 2026-08-25 00:26:21,804 log "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2814
+INFO 2026-08-25 00:26:21,807 log "GET /static/admin/css/responsive.css HTTP/1.1" 200 15025
+INFO 2026-08-25 00:26:21,810 log "GET /static/admin/css/dashboard.css HTTP/1.1" 200 442
+INFO 2026-08-25 00:26:21,818 log "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3208
+INFO 2026-08-25 00:26:21,829 log "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 978
+INFO 2026-08-25 00:26:21,830 log "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 593
+INFO 2026-08-25 00:26:31,191 log "GET /admin/auth/ HTTP/1.1" 200 6240
+INFO 2026-08-25 00:26:33,678 log "GET /admin/auth/ HTTP/1.1" 200 6240
+INFO 2026-08-25 00:26:35,715 log "GET /admin/ HTTP/1.1" 200 6194
+INFO 2026-08-25 00:26:43,108 log "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:26:43,115 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:26:43,153 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 00:26:43,154 log "GET /static/js/script.js HTTP/1.1" 304 0
+INFO 2026-08-25 00:26:51,940 log "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:26:52,027 log "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4320
+INFO 2026-08-25 00:26:52,091 log "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2026-08-25 00:27:06,148 log "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:06,163 log "GET /admin/ HTTP/1.1" 200 6194
+INFO 2026-08-25 00:27:09,994 log "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:10,021 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:27:16,047 log "GET /admin HTTP/1.1" 301 0
+INFO 2026-08-25 00:27:16,056 log "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:16,074 log "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4320
+INFO 2026-08-25 00:27:27,619 log "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:27,638 log "GET /admin/ HTTP/1.1" 200 6194
+INFO 2026-08-25 00:27:30,694 log "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:30,707 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:27:48,680 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:48,698 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 00:27:55,719 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:27:55,726 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 00:28:04,354 log "GET / HTTP/1.1" 200 3138
+INFO 2026-08-25 00:28:46,157 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 00:28:46,167 log "GET /login/ HTTP/1.1" 200 2526
+INFO 2026-08-25 02:16:46,075 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:18:00,407 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-25 02:18:01,990 autoreload Watching for file changes with StatReloader
+ERROR 2026-08-25 02:18:22,724 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 36, in login_view
+    return render(request, 'food/login.html')
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 27, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: food/login.html
+ERROR 2026-08-25 02:18:22,730 log "GET / HTTP/1.1" 500 86228
+ERROR 2026-08-25 02:18:50,208 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 36, in login_view
+    return render(request, 'food/login.html')
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 27, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: food/login.html
+ERROR 2026-08-25 02:18:50,210 log "GET / HTTP/1.1" 500 86228
+INFO 2026-08-25 02:19:20,354 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-25 02:19:21,879 autoreload Watching for file changes with StatReloader
+ERROR 2026-08-25 02:19:26,447 log Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\utils\deprecation.py", line 440, in __call__
+    response = self.process_request(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\http\request.py", line 210, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2026-08-25 02:19:33,766 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 36, in login_view
+    return render(request, 'partials/login.html')
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 27, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\base.py", line 1107, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\base.py", line 1068, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\template\defaulttags.py", line 511, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'login' not found. 'login' is not a valid view function or pattern name.
+INFO 2026-08-25 02:20:03,656 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:20:03,829 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 02:20:03,830 log "GET /static/js/script.js HTTP/1.1" 304 0
+ERROR 2026-08-25 02:20:32,674 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 32, in login_view
+    return redirect('dashboard')
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 60, in redirect
+    resolve_url(to, *args, **kwargs),
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 201, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-08-25 02:20:32,677 log "POST / HTTP/1.1" 500 92685
+INFO 2026-08-25 02:21:38,543 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:21:48,163 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:21:53,453 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:21:53,471 log "GET / HTTP/1.1" 200 2520
+ERROR 2026-08-25 02:22:08,872 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 32, in login_view
+    return redirect('dashboard')
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 60, in redirect
+    resolve_url(to, *args, **kwargs),
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\shortcuts.py", line 201, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'dashboard' not found. 'dashboard' is not a valid view function or pattern name.
+ERROR 2026-08-25 02:22:08,874 log "POST / HTTP/1.1" 500 92685
+INFO 2026-08-25 02:22:42,149 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\symposium\settings.py changed, reloading.
+INFO 2026-08-25 02:22:43,397 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:22:45,473 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\symposium\settings.py changed, reloading.
+INFO 2026-08-25 02:22:46,492 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:23:11,606 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:23:16,962 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 02:23:31,044 log "POST / HTTP/1.1" 302 0
+ERROR 2026-08-25 02:23:32,317 log Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py", line 51, in dashboard
+    response = supabase.table("participants").select("*").execute()
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'Invalid path specified in request URL', 'code': 'PGRST125', 'hint': None, 'details': None}
+ERROR 2026-08-25 02:23:32,321 log "GET /dashboard/ HTTP/1.1" 500 81471
+INFO 2026-08-25 02:24:23,162 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-25 02:24:24,166 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:24:51,060 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:24:51,734 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:25:02,048 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:25:02,844 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:25:07,290 log "GET /scanner/ HTTP/1.1" 200 5580
+INFO 2026-08-25 02:25:18,954 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:25:20,764 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 02:25:20,768 log "GET / HTTP/1.1" 200 2814
+INFO 2026-08-25 02:25:36,124 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-25 02:25:36,710 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:25:45,611 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:25:46,024 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:26:54,296 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 02:26:54,314 log "GET / HTTP/1.1" 200 2814
+INFO 2026-08-25 02:27:09,324 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-25 02:27:09,743 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:27:12,588 log "GET /scanner/ HTTP/1.1" 200 5580
+INFO 2026-08-25 02:27:19,843 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:27:23,595 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:37:40,129 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:37:42,491 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:37:43,464 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:41:13,742 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:41:20,813 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:41:21,656 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:41:21,758 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 02:41:21,762 log "GET /static/js/script.js HTTP/1.1" 304 0
+INFO 2026-08-25 02:54:41,522 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:54:47,666 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:54:48,809 log "GET /dashboard/ HTTP/1.1" 200 3138
+INFO 2026-08-25 02:56:22,173 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:56:22,282 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:56:22,593 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:56:22,991 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:56:31,625 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:56:36,072 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-25 02:56:36,077 log "GET / HTTP/1.1" 200 2814
+INFO 2026-08-25 02:56:48,993 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-25 02:56:49,763 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:57:01,007 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 02:57:03,920 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:57:04,556 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:57:18,348 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 02:57:18,796 log "GET /dashboard/ HTTP/1.1" 200 3140
+INFO 2026-08-25 02:58:27,210 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 02:58:27,303 log "GET /static/js/script.js?v=2 HTTP/1.1" 200 21487
+INFO 2026-08-25 03:10:21,775 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 03:10:22,657 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 03:10:22,686 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 03:10:22,687 log "GET /static/js/script.js?v=2 HTTP/1.1" 304 0
+INFO 2026-08-25 03:10:27,946 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 03:10:28,612 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 03:13:15,508 log "GET /scanner/ HTTP/1.1" 302 0
+INFO 2026-08-25 03:13:24,165 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-25 03:13:25,285 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 03:13:45,428 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 03:13:46,762 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 03:13:46,933 log "GET /static/js/script.js?v=2 HTTP/1.1" 200 22970
+INFO 2026-08-25 03:14:04,414 log "GET / HTTP/1.1" 200 2520
+INFO 2026-08-25 03:14:04,454 log "GET /static/css/style.css HTTP/1.1" 200 11884
+INFO 2026-08-25 03:14:04,456 log "GET /static/js/script.js HTTP/1.1" 200 22970
+WARNING 2026-08-25 03:14:05,113 log Not Found: /favicon.ico
+WARNING 2026-08-25 03:14:05,114 log "GET /favicon.ico HTTP/1.1" 404 3996
+INFO 2026-08-25 03:14:22,309 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-25 03:14:22,790 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 03:14:22,821 log "GET /static/js/script.js?v=2 HTTP/1.1" 200 22970
+INFO 2026-08-25 03:14:26,443 log "GET /scanner/ HTTP/1.1" 200 5707
+INFO 2026-08-25 03:14:26,461 log "GET /static/js/script.js HTTP/1.1" 304 0
+INFO 2026-08-25 09:34:32,277 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 09:34:36,082 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 09:34:41,182 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 09:34:41,301 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 09:34:41,307 log "GET /static/js/script.js?v=2 HTTP/1.1" 304 0
+INFO 2026-08-25 09:34:49,899 log "GET /scanner/ HTTP/1.1" 200 5707
+INFO 2026-08-25 09:34:50,150 log "GET /static/js/script.js HTTP/1.1" 200 22970
+INFO 2026-08-25 09:34:59,364 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 10:59:12,503 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 10:59:15,562 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 10:59:16,853 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 10:59:17,000 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 10:59:17,003 log "GET /static/js/script.js?v=2 HTTP/1.1" 304 0
+INFO 2026-08-25 11:04:06,876 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 11:04:06,913 log "GET /static/js/script.js?v=2 HTTP/1.1" 304 0
+INFO 2026-08-25 11:04:06,914 log "GET /static/css/style.css HTTP/1.1" 304 0
+WARNING 2026-08-25 11:04:07,032 log Not Found: /favicon.ico
+WARNING 2026-08-25 11:04:07,033 log "GET /favicon.ico HTTP/1.1" 404 3996
+INFO 2026-08-25 12:32:52,846 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 12:32:56,023 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 12:32:56,838 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 12:32:56,973 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-25 12:32:56,975 log "GET /static/js/script.js?v=2 HTTP/1.1" 304 0
+INFO 2026-08-25 12:33:01,407 log "GET /scanner/ HTTP/1.1" 200 5707
+INFO 2026-08-25 12:33:01,461 log "GET /static/js/script.js HTTP/1.1" 304 0
+INFO 2026-08-25 12:33:18,537 log "POST /api/verify/ HTTP/1.1" 200 165
+ERROR 2026-08-25 12:33:29,498 log Internal Server Error: /api/claim/
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py", line 150, in claim_food
+    supabase.table("claims").insert(claim_data).execute()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'new row violates row-level security policy for table "claims"', 'code': '42501', 'hint': None, 'details': None}
+ERROR 2026-08-25 12:33:29,505 log "POST /api/claim/ HTTP/1.1" 500 83985
+INFO 2026-08-25 12:54:14,294 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 12:54:20,957 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 12:54:23,512 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 12:54:27,569 log "GET /scanner/ HTTP/1.1" 200 5707
+INFO 2026-08-25 12:57:57,422 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-25 12:57:59,643 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 12:59:04,966 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\symposium\supabase_config.py changed, reloading.
+INFO 2026-08-25 12:59:06,328 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 13:00:25,051 autoreload Watching for file changes with StatReloader
+INFO 2026-08-25 13:00:27,922 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-25 13:00:30,165 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-25 13:00:33,545 log "GET /scanner/ HTTP/1.1" 200 5707
+INFO 2026-08-25 13:00:58,742 log "POST /api/verify/ HTTP/1.1" 200 165
+ERROR 2026-08-25 13:01:05,082 log Internal Server Error: /api/claim/
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py", line 153, in claim_food
+    claim_response = supabase.table("claims").insert(claim_data).execute()
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'duplicate key value violates unique constraint "claims_participant_id_unique"', 'code': '23505', 'hint': None, 'details': 'Key (participant_id)=(ab3d2d2b-4d55-478e-bc02-5d67497641a5) already exists.'}
+ERROR 2026-08-25 13:01:05,087 log "POST /api/claim/ HTTP/1.1" 500 85435
+WARNING 2026-08-25 13:01:05,487 log Bad Request: /api/claim/
+WARNING 2026-08-25 13:01:05,488 log "POST /api/claim/ HTTP/1.1" 400 53
+WARNING 2026-08-25 13:01:15,582 log Bad Request: /api/claim/
+WARNING 2026-08-25 13:01:15,582 log "POST /api/claim/ HTTP/1.1" 400 53
+INFO 2026-08-25 13:03:14,999 log "POST /api/verify/ HTTP/1.1" 200 165
+ERROR 2026-08-25 13:03:21,078 log Internal Server Error: /api/claim/
+Traceback (most recent call last):
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\exception.py", line 56, in inner
+    response = get_response(request)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\core\handlers\base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\django\contrib\auth\decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py", line 153, in claim_food
+    claim_response = supabase.table("claims").insert(claim_data).execute()
+  File "C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'duplicate key value violates unique constraint "claims_participant_id_unique"', 'code': '23505', 'hint': None, 'details': 'Key (participant_id)=(f1ac2910-5b2c-41cf-8cce-920441f4eea5) already exists.'}
+ERROR 2026-08-25 13:03:21,080 log "POST /api/claim/ HTTP/1.1" 500 85435
+WARNING 2026-08-25 13:03:26,609 log Bad Request: /api/claim/
+WARNING 2026-08-25 13:03:26,611 log "POST /api/claim/ HTTP/1.1" 400 53
+INFO 2026-08-25 13:04:35,027 log "GET /dashboard/ HTTP/1.1" 200 3144
+INFO 2026-08-26 17:07:47,389 autoreload Watching for file changes with StatReloader
+INFO 2026-08-26 17:12:49,378 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\symposium\settings.py changed, reloading.
