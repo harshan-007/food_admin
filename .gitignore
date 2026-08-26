@@ -1,11 +1,7 @@
 venv/
-<<<<<<< HEAD
-__pycache__/
-=======
 **/venv/
 __pycache__/
 **/__pycache__/
->>>>>>> 14e899ca1008e9566c612b7db9aa6921050e41db
 *.pyc
 *.log
 logs/
@@ -13,6 +9,3 @@ logs/
 .vscode/
 <<<<<<< HEAD
 staticfiles/
-=======
-staticfiles/
->>>>>>> 14e899ca1008e9566c612b7db9aa6921050e41db
