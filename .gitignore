@@ -1,11 +1,33 @@
+# Python & Virtual Environments
 venv/
 **/venv/
 __pycache__/
 **/__pycache__/
-*.pyc
-*.log
-logs/
+*.py[cod]
+*$py.class
+*.env
 .env
-.vscode/
-<<<<<<< HEAD
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Static & Media files
 staticfiles/
+media/qr_codes/
+
+# Database (keep local dev sqlite out of git)
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3*
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
