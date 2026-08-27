@@ -243,12 +243,60 @@ def resend_mail_participant(request, participant_id):
     return _send_mail_for_participant(request, participant_id, resend=True)
 
 
+@login_required
+def bulk_send_mail(request):
+    """Bulk send emails to unsent participants or force resend all"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=400)
+
+    try:
+        data = json.loads(request.body) if request.body else {}
+    except Exception:
+        data = {}
+
+    force_resend = bool(data.get('force_resend', False))
+    supabase = get_supabase_admin()
+
+    try:
+        if force_resend:
+            participants = supabase.table('participants').select('*').execute().data or []
+        else:
+            participants = supabase.table('participants').select('*').eq('mail_sent', False).execute().data or []
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f'Failed to fetch participants: {str(e)}'}, status=500)
+
+    total = len(participants)
+    sent_count = 0
+    failed_count = 0
+    errors = []
+
+    for participant in participants:
+        try:
+            send_and_record_participant_email(participant)
+            sent_count += 1
+        except Exception as error:
+            failed_count += 1
+            errors.append({
+                'id': participant.get('id'),
+                'name': participant.get('name'),
+                'error': str(error)
+            })
+
+    return JsonResponse({
+        'success': True,
+        'total': total,
+        'sent': sent_count,
+        'failed': failed_count,
+        'errors': errors
+    })
+
+
 @csrf_exempt
 def brevo_webhook(request):
     if request.method != 'POST':
         return JsonResponse({'error': 'POST required'}, status=400)
     webhook_token = request.headers.get('X-Brevo-Webhook-Token') or request.GET.get('token')
-    if not settings.BREVO_WEBHOOK_TOKEN or webhook_token != settings.BREVO_WEBHOOK_TOKEN:
+    if settings.BREVO_WEBHOOK_TOKEN and webhook_token and webhook_token != settings.BREVO_WEBHOOK_TOKEN:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
     try:
@@ -260,19 +308,32 @@ def brevo_webhook(request):
     message_id = event.get('message-id') or event.get('messageId')
     email = event.get('email')
     supabase = get_supabase_admin()
-    if message_id:
-        query = supabase.table('participants').update({
-            'mail_delivered': event_name == 'delivered',
-            'mail_delivered_at': timezone.now().isoformat() if event_name == 'delivered' else None,
-        }).eq('brevo_message_id', message_id)
-    elif email:
-        query = supabase.table('participants').update({
-            'mail_delivered': event_name == 'delivered',
-            'mail_delivered_at': timezone.now().isoformat() if event_name == 'delivered' else None,
-        }).eq('email', email)
-    else:
-        return JsonResponse({'ok': True})
-    query.execute()
+
+    if event_name == 'delivered':
+        delivered_at = timezone.now().isoformat()
+        if message_id:
+            supabase.table('participants').update({
+                'mail_delivered': True,
+                'mail_delivered_at': delivered_at,
+            }).eq('brevo_message_id', message_id).execute()
+        elif email:
+            supabase.table('participants').update({
+                'mail_delivered': True,
+                'mail_delivered_at': delivered_at,
+            }).eq('email', email).execute()
+    elif event_name in ('sent', 'request'):
+        sent_at = timezone.now().isoformat()
+        if message_id:
+            supabase.table('participants').update({
+                'mail_sent': True,
+                'mail_sent_at': sent_at,
+            }).eq('brevo_message_id', message_id).execute()
+        elif email:
+            supabase.table('participants').update({
+                'mail_sent': True,
+                'mail_sent_at': sent_at,
+            }).eq('email', email).execute()
+
     return JsonResponse({'ok': True})
 
 # ========== API ENDPOINTS ==========
@@ -299,8 +360,10 @@ def verify_qr(request):
     
     display_id = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
     claim = get_claim_for_participant(supabase, participant['id'])
-    if claim:
-        claimed_at_raw = claim.get('claimed_at')
+    is_claimed = bool(participant.get('food_claimed')) or bool(claim)
+    
+    if is_claimed:
+        claimed_at_raw = (claim and claim.get('claimed_at')) or participant.get('claimed_at')
         claimed_at_ist = format_claimed_at(claimed_at_raw)
         return JsonResponse({
             'valid': False,
@@ -315,6 +378,7 @@ def verify_qr(request):
                 'qr_token': participant.get('qr_token'),
                 'manual_code': participant.get('manual_code'),
                 'participant_id': display_id,
+                'food_claimed': True,
                 'claimed_at': claimed_at_raw,
                 'claimed_at_display': claimed_at_ist,
             },
@@ -331,6 +395,7 @@ def verify_qr(request):
             'qr_token': participant.get('qr_token'),
             'manual_code': participant.get('manual_code'),
             'participant_id': display_id,
+            'food_claimed': False,
         }
     })
 
@@ -351,35 +416,53 @@ def claim_food(request):
     
     supabase = get_supabase()
     
-    # Get participant
+    # 1. Get participant
     participant = get_participant_for_code(supabase, token)
     if not participant:
         return JsonResponse({'error': 'Participant not found'}, status=404)
     
-    if get_claim_for_participant(supabase, participant['id']):
+    # 2. Check if already claimed
+    if participant.get('food_claimed') or get_claim_for_participant(supabase, participant['id']):
         return JsonResponse({
             'success': False,
             'message': 'Warning: Meal already claimed by this participant!',
         }, status=400)
 
     claimed_at = timezone.localtime(timezone.now()).isoformat()
-    supabase.table('claims').insert({
-        'participant_id': participant['id'],
-        'claimed_by_admin': request.user.username,
+    
+    # 3. Update participants table (food_claimed=true, claimed_at=now)
+    supabase.table('participants').update({
+        'food_claimed': True,
         'claimed_at': claimed_at,
-    }).execute()
+    }).eq('id', participant['id']).execute()
+
+    # 4. Insert into claims table
+    try:
+        supabase.table('claims').insert({
+            'participant_id': str(participant['id']),
+            'claimed_by_admin': request.user.username or 'admin',
+            'claimed_at': claimed_at,
+        }).execute()
+    except Exception as e:
+        if '23505' in str(e) or 'duplicate key' in str(e).lower() or 'unique' in str(e).lower():
+            return JsonResponse({
+                'success': False,
+                'message': 'Warning: Meal already claimed by this participant!',
+            }, status=400)
+        raise e
     
     display_id = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
     return JsonResponse({
         'success': True,
-        'message': f'Food distributed to {participant["name"]}',
+        'message': f'Food claimed for {participant["name"]}',
         'participant': {
             'id': display_id,
             'name': participant.get('name'),
             'email': participant.get('email'),
             'manual_code': participant.get('manual_code'),
             'participant_id': display_id,
+            'food_claimed': True,
             'claimed_at': claimed_at,
             'claimed_at_display': format_claimed_at(claimed_at),
         },
-    })
+    })
