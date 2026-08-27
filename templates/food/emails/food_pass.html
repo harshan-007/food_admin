@@ -29,12 +29,19 @@
       </table>
     </td></tr>
     <tr><td align="center" style="padding:20px 16px 0;">
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:400px; background-color:#FFFFFF; border-radius:12px;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:400px; background-color:#FFFFFF; border-radius:12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #E2E8F0;">
         <tr><td align="center" style="padding:28px 20px;">
-          <h2 style="margin:0; color:#0A1F44; font-size:22px;">YOUR QR CODE</h2>
-          <p style="margin:20px 0; padding:20px; background-color:#E8F9FA; border-radius:8px; color:#0A1F44; line-height:1.5;">Your QR code is attached to this email as a PNG file. Open the attachment and show it at the food counter.</p>
-          <p style="margin:0 0 10px; color:#0A1F44; font-size:16px; font-weight:bold;">Manual code = {{ manual_code }}</p>
-          <p style="margin:0; font-size:14px; line-height:1.5; color:#555555;">Show this QR code at the food counter to collect your food.</p>
+          <h2 style="margin:0 0 12px; color:#0A1F44; font-size:20px; text-transform:uppercase; letter-spacing:0.5px;">YOUR FOOD PASS QR CODE</h2>
+          {% if qr_image_url %}
+            <div style="margin: 12px 0 16px;">
+              <img src="{{ qr_image_url }}" alt="TECHNOVANZA QR Pass" width="220" height="220" style="display:block; margin:0 auto; border: 2px solid #00B5AD; border-radius:12px; padding:6px; background:#FFFFFF;">
+            </div>
+          {% endif %}
+          <div style="margin:0 0 10px; padding: 10px 16px; background-color: #F8FAFC; border-radius: 8px; border: 1px dashed #CBD5E1;">
+            <span style="color:#64748B; font-size:12px; font-weight:bold; text-transform:uppercase; display:block;">Manual Code</span>
+            <strong style="color:#0A1F44; font-size:22px; letter-spacing:2px; font-family:monospace;">{{ manual_code }}</strong>
+          </div>
+          <p style="margin:0; font-size:13px; line-height:1.5; color:#64748B;">Present this QR code or Manual ID at the food counter to collect your meal.</p>
         </td></tr>
       </table>
     </td></tr>

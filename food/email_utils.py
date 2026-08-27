@@ -38,6 +38,7 @@ def send_participant_email(participant):
         html_content = render_to_string("food/emails/food_pass.html", {
             "participant_name": participant_name,
             "manual_code": manual_code,
+            "qr_image_url": qr_image_url,
         })
     except Exception:
         html_content = (

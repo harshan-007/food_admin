@@ -150,9 +150,10 @@ def dashboard(request):
     }
     for participant in participants:
         claim = claims_by_participant.get(participant.get('id'))
-        participant['food_claimed'] = claim is not None
-        participant['claimed_at'] = claim.get('claimed_at') if claim else None
-        participant['claimed_at_display'] = format_claimed_at(participant['claimed_at'])
+        participant['food_claimed'] = bool(participant.get('food_claimed')) or (claim is not None)
+        if not participant.get('claimed_at') and claim:
+            participant['claimed_at'] = claim.get('claimed_at')
+        participant['claimed_at_display'] = format_claimed_at(participant.get('claimed_at'))
         participant['display_id'] = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
 
     total = len(participants)
