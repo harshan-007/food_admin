@@ -5,29 +5,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mail Center | Symposium Food Counter</title>
-    <link rel="stylesheet" href="{% static 'css/email.css' %}?v=1">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/email.css' %}?v=2">
 </head>
 <body>
+    {% csrf_token %}
     <main class="page-shell">
-        <a class="back-link page-back-link" href="{% url 'food:dashboard' %}">&larr; Back to Dashboard</a>
+        <!-- Top Back Navigation -->
+        <a class="back-link page-back-link" href="{% url 'food:dashboard' %}">
+            <span>&larr;</span> Back to Dashboard
+        </a>
+
+        <!-- Page Heading & Global Actions -->
         <section class="page-heading">
-            <div><p class="eyebrow">COMMUNICATION CENTER</p><h1>Email participants</h1><p class="intro">Send each delegate their personal food collection pass.</p></div>
-            <button class="primary-button send-all-button" id="sendAllButton" type="button">Send mail to all</button>
+            <div>
+                <p class="eyebrow">COMMUNICATION CENTER</p>
+                <h1>Delegate Mail Portal</h1>
+                <p class="intro">Dispatch QR-coded food passes directly to delegates via Brevo Email Service.</p>
+            </div>
+            <div class="page-actions">
+                <button class="secondary-button" id="refreshButton" type="button" title="Refresh delegate roster">
+                    🔄 Refresh
+                </button>
+                <button class="primary-button send-all-button" id="sendAllButton" type="button">
+                    ✉️ Send Mail to All
+                </button>
+            </div>
         </section>
+
+        <!-- Live Batch Progress Banner (Hidden by default) -->
+        <section class="batch-progress-card" id="batchProgressCard" hidden>
+            <div class="batch-progress-header">
+                <span class="batch-progress-title" id="batchProgressTitle">Sending emails...</span>
+                <span class="batch-progress-counter" id="batchProgressCounter">0 / 0</span>
+            </div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="progressBarFill" style="width: 0%;"></div>
+            </div>
+        </section>
+
+        <!-- Status Toast Banner -->
+        <div class="status-banner" id="mailStatus" role="status" hidden></div>
+
+        <!-- Statistics Grid -->
         <section class="stats-grid" aria-label="Email statistics">
-            <article class="stat-card"><span class="stat-label">Total participants</span><strong id="totalCount">0</strong><span class="stat-note">Registered delegates</span></article>
-            <article class="stat-card stat-ready"><span class="stat-label">Mail received</span><strong id="sentCount">0</strong><span class="stat-note">Confirmed by Brevo</span></article>
-            <article class="stat-card stat-missing"><span class="stat-label">Mail not received</span><strong id="notSentCount">0</strong><span class="stat-note">Not yet confirmed</span></article>
+            <article class="stat-card stat-total">
+                <span class="stat-label">Total Participants</span>
+                <strong id="totalCount">0</strong>
+                <span class="stat-note">Registered delegates</span>
+            </article>
+            <article class="stat-card stat-sent">
+                <span class="stat-label">Mail Sent</span>
+                <strong id="sentCount">0</strong>
+                <span class="stat-note">Dispatched via Brevo</span>
+            </article>
+            <article class="stat-card stat-delivered">
+                <span class="stat-label">Confirmed Delivered</span>
+                <strong id="deliveredCount">0</strong>
+                <span class="stat-note">Verified delivery receipts</span>
+            </article>
+            <article class="stat-card stat-missing">
+                <span class="stat-label">Pending Collection</span>
+                <strong id="notSentCount">0</strong>
+                <span class="stat-note">Not yet emailed</span>
+            </article>
         </section>
+
+        <!-- Participant Email Directory Panel -->
         <section class="panel roster-panel">
             <div class="panel-heading roster-heading">
-                <div><p class="section-kicker">DIRECTORY</p><h2>Participant email directory</h2><p class="panel-description">Review participant contact details and send missing passes.</p></div>
-                <div class="directory-tools"><label class="search-field" for="rosterSearch"><span aria-hidden="true">⌕</span><input id="rosterSearch" type="search" placeholder="Search delegates"></label><div class="directory-filters" aria-label="Filter participants by mail status"><button class="filter-button active" type="button" data-filter="all">All</button><button class="filter-button" type="button" data-filter="sent">Sent</button><button class="filter-button" type="button" data-filter="not-sent">Not sent</button></div></div>
+                <div>
+                    <p class="section-kicker">DIRECTORY</p>
+                    <h2>Participant Email Directory</h2>
+                    <p class="panel-description">Search delegates by name, email, or Manual ID to send or resend individual passes.</p>
+                </div>
+                <div class="directory-tools">
+                    <label class="search-field" for="rosterSearch">
+                        <span aria-hidden="true">🔍</span>
+                        <input id="rosterSearch" type="search" placeholder="Search name, email, or Manual ID...">
+                    </label>
+                    <div class="directory-filters" aria-label="Filter participants by mail status">
+                        <button class="filter-button active" type="button" data-filter="all">All (<span id="filterCountAll">0</span>)</button>
+                        <button class="filter-button" type="button" data-filter="sent">Sent (<span id="filterCountSent">0</span>)</button>
+                        <button class="filter-button" type="button" data-filter="not-sent">Pending (<span id="filterCountNotSent">0</span>)</button>
+                    </div>
+                </div>
             </div>
-            <p class="form-status" id="mailStatus" role="status"></p>
-            <div class="table-wrap"><table><thead><tr><th>Name</th><th>Mail</th><th>Mail status</th><th>Action</th></tr></thead><tbody id="rosterBody"></tbody></table><p class="empty-state" id="emptyState" hidden>No delegates match your search.</p></div>
+
+            <!-- Table Container -->
+            <div class="table-wrap">
+                <table id="rosterTable">
+                    <thead>
+                        <tr>
+                            <th>Manual ID</th>
+                            <th>Participant Name</th>
+                            <th>Email Address</th>
+                            <th>Mail Status</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rosterBody">
+                        <tr>
+                            <td colspan="5" class="table-loading">Loading delegate roster...</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="empty-state" id="emptyState" hidden>No delegates match your search or filter.</p>
+            </div>
         </section>
     </main>
-    <script src="{% static 'js/email.js' %}?v=1"></script>
+
+    <script src="{% static 'js/email.js' %}?v=2"></script>
 </body>
 </html>

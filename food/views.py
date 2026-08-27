@@ -194,32 +194,39 @@ def email_page(request):
 
 @login_required
 def mail_participants_list(request):
-    participants = get_supabase_admin().table('participants').select(
-        'id,name,email,mail_sent,mail_sent_at,mail_delivered,mail_delivered_at'
-    ).order('name').execute().data
+    try:
+        supabase = get_supabase_admin()
+        participants = supabase.table('participants').select(
+            'id,name,email,manual_code,qr_token,mail_sent,mail_sent_at,mail_delivered,mail_delivered_at,qr_image_url'
+        ).order('name').execute().data or []
+        for p in participants:
+            p['display_id'] = p.get('manual_code') or p.get('id')
+    except Exception as e:
+        participants = []
     return JsonResponse(participants, safe=False)
 
 
 def _send_mail_for_participant(request, participant_id, resend=False):
-    supabase = get_supabase_admin()
-    participant_response = supabase.table('participants').select('*').eq(
-        'id', participant_id
-    ).limit(1).execute()
-    if not participant_response.data:
-        return JsonResponse({'error': 'Participant not found'}, status=404)
-
-    participant = participant_response.data[0]
-    if participant.get('mail_sent') and not resend:
-        return JsonResponse({'success': False, 'error': 'Email already sent'}, status=400)
-
     try:
+        pid_str = str(participant_id)
+        supabase = get_supabase_admin()
+        participant_response = supabase.table('participants').select('*').eq(
+            'id', pid_str
+        ).limit(1).execute()
+        if not participant_response.data:
+            return JsonResponse({'error': 'Participant not found'}, status=404)
+
+        participant = participant_response.data[0]
+        if participant.get('mail_sent') and not resend:
+            return JsonResponse({'success': False, 'error': 'Email already sent'}, status=400)
+
         sent = send_and_record_participant_email(participant)
+        participant.update(sent)
+        participant['mail_sent'] = True
+        participant['display_id'] = participant.get('manual_code') or participant.get('id')
+        return JsonResponse({'success': True, 'participant': participant})
     except Exception as error:
         return JsonResponse({'success': False, 'error': str(error)}, status=502)
-
-    participant.update(sent)
-    participant['mail_sent'] = True
-    return JsonResponse({'success': True, 'participant': participant})
 
 
 @login_required
