@@ -126,6 +126,7 @@ def verify_qr(request):
     
     claim = get_claim_for_participant(supabase, participant['id'])
     if claim:
+        request.session.pop('verified_participant_id', None)
         return JsonResponse({
             'valid': False,
             'claimed': True,
@@ -140,6 +141,7 @@ def verify_qr(request):
             },
         })
 
+    request.session['verified_participant_id'] = str(participant['id'])
     return JsonResponse({
         'valid': True,
         'claimed': False,
@@ -174,6 +176,12 @@ def claim_food(request):
     participant = get_participant_for_code(supabase, token)
     if not participant:
         return JsonResponse({'error': 'Invalid QR code'}, status=404)
+
+    if request.session.get('verified_participant_id') != str(participant['id']):
+        return JsonResponse({
+            'success': False,
+            'message': 'Scan and verify the QR code before claiming food',
+        }, status=403)
     
     if get_claim_for_participant(supabase, participant['id']):
         return JsonResponse({
@@ -188,6 +196,7 @@ def claim_food(request):
         'claimed_by_admin': request.user.username,
         'claimed_at': claimed_at,
     }).execute()
+    request.session.pop('verified_participant_id', None)
     
     return JsonResponse({
         'success': True,
