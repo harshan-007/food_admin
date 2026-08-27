@@ -367,3 +367,50 @@ INFO 2026-08-26 17:12:49,378 autoreload C:\Users\barat\OneDrive\Documents\BALAxJ
 INFO 2026-08-26 17:12:49,990 autoreload Watching for file changes with StatReloader
 INFO 2026-08-26 17:13:47,334 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\manage.py changed, reloading.
 INFO 2026-08-26 17:13:48,729 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:18:08,526 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:19:34,610 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:25:17,895 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:26:51,438 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-27 12:26:53,024 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:26:55,657 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-27 12:26:57,055 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:29:10,519 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:33:08,298 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:37:56,154 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:38:01,099 log "GET / HTTP/1.1" 200 3340
+INFO 2026-08-27 12:38:04,697 log "GET /static/css/style.css HTTP/1.1" 200 16514
+INFO 2026-08-27 12:38:20,898 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-27 12:38:21,886 log "GET /dashboard/ HTTP/1.1" 200 43901
+INFO 2026-08-27 12:38:21,934 log "GET /static/css/style.css?v=3 HTTP/1.1" 200 16514
+INFO 2026-08-27 12:38:21,936 log "GET /static/js/script.js?v=4 HTTP/1.1" 200 25531
+INFO 2026-08-27 12:44:17,090 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:44:19,366 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-27 12:44:20,109 log "GET /dashboard/ HTTP/1.1" 200 43901
+INFO 2026-08-27 12:44:23,709 log "GET /static/css/style.css?v=3 HTTP/1.1" 304 0
+INFO 2026-08-27 12:44:23,714 log "GET /static/js/script.js?v=4 HTTP/1.1" 304 0
+INFO 2026-08-27 12:45:53,368 log "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2026-08-27 12:45:53,374 log "GET /?next=/dashboard/ HTTP/1.1" 200 3340
+INFO 2026-08-27 12:46:01,045 log "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2026-08-27 12:46:01,047 log "GET /?next=/dashboard/ HTTP/1.1" 200 3340
+INFO 2026-08-27 12:46:15,689 log "GET /static/css/style.css?v=3 HTTP/1.1" 200 16514
+INFO 2026-08-27 12:47:01,501 log "GET /logout/ HTTP/1.1" 302 0
+INFO 2026-08-27 12:47:01,511 log "GET / HTTP/1.1" 200 3650
+INFO 2026-08-27 12:47:01,561 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-08-27 12:47:12,001 log "GET / HTTP/1.1" 200 3340
+INFO 2026-08-27 12:47:22,392 log "POST / HTTP/1.1" 200 3653
+INFO 2026-08-27 12:47:37,677 log "POST / HTTP/1.1" 302 0
+INFO 2026-08-27 12:47:38,891 log "GET /dashboard/ HTTP/1.1" 200 43901
+INFO 2026-08-27 12:47:53,464 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:47:56,689 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-27 12:47:57,503 log "GET /dashboard/ HTTP/1.1" 200 43901
+INFO 2026-08-27 12:48:01,788 log "GET /static/css/style.css?v=3 HTTP/1.1" 304 0
+INFO 2026-08-27 12:48:01,790 log "GET /static/js/script.js?v=4 HTTP/1.1" 304 0
+INFO 2026-08-27 12:59:50,070 autoreload C:\Users\barat\OneDrive\Documents\BALAxJD\food_admin-master\food\views.py changed, reloading.
+INFO 2026-08-27 12:59:50,830 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 12:59:58,738 autoreload Watching for file changes with StatReloader
+INFO 2026-08-27 13:00:02,043 log "GET / HTTP/1.1" 302 0
+INFO 2026-08-27 13:00:03,271 log "GET /dashboard/ HTTP/1.1" 200 44141
+INFO 2026-08-27 13:00:06,283 log "GET /static/css/style.css?v=3 HTTP/1.1" 304 0
+INFO 2026-08-27 13:00:06,285 log "GET /static/js/script.js?v=4 HTTP/1.1" 304 0
+INFO 2026-08-27 13:00:47,000 log "GET /scanner/ HTTP/1.1" 200 5684
+INFO 2026-08-27 13:00:56,557 log "GET /dashboard/ HTTP/1.1" 200 44141
