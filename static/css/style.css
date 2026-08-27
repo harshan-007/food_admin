@@ -66,6 +66,12 @@ body {
     font-size: 0.95rem;
 }
 
+.search-box input::placeholder,
+.manual-qr-input::placeholder {
+    color: #cbd5e1;
+    opacity: 1;
+}
+
 /* =====================================================
    NAVBARS
 ===================================================== */
@@ -128,6 +134,10 @@ body {
 .back-link:hover {
     color: #c084fc;
     transform: translateX(-3px);
+}
+
+.scanner-navbar .navbar-brand {
+    color: #ffffff;
 }
 
 /* =====================================================
@@ -347,6 +357,19 @@ body {
     color: var(--text-primary);
 }
 
+.participant-table-scroll {
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 10px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.participant-table-scroll::-webkit-scrollbar {
+    display: none;
+}
+
 .custom-table thead th {
     background: rgba(10, 14, 23, 0.6);
     color: var(--text-secondary);
@@ -356,6 +379,9 @@ body {
     letter-spacing: 0.8px;
     border-bottom: 1px solid var(--border-subtle);
     padding: 12px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .custom-table tbody td {
@@ -486,6 +512,10 @@ body {
     box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
 }
 
+.login-card-wrapper .text-muted {
+    color: #cbd5e1 !important;
+}
+
 .scanner-status-badge {
     display: inline-block;
     padding: 6px 14px;
@@ -571,6 +601,12 @@ body {
     background: rgba(239, 68, 68, 0.12);
     border: 1px solid rgba(239, 68, 68, 0.3);
     color: #f87171;
+}
+
+.banner-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
 }
 
 .banner-title {

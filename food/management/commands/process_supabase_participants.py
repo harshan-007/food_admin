@@ -6,6 +6,7 @@ import urllib.request
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.template.loader import render_to_string
 
 from food.qr_utils import create_qr_code
 from symposium.supabase_config import get_supabase, get_supabase_admin
@@ -15,6 +16,7 @@ class Command(BaseCommand):
     help = "Generate and email QR codes for participants stored in Supabase"
 
     def send_qr_email(self, participant, qr):
+        participant_name = participant.get("name", "Participant")
         payload = {
             "sender": {
                 "email": settings.BREVO_SENDER_EMAIL,
@@ -22,13 +24,21 @@ class Command(BaseCommand):
             },
             "to": [{
                 "email": participant["email"],
-                "name": participant.get("name", "Participant"),
+                "name": participant_name,
             }],
-            "subject": "Your Symposium Food QR Code",
+            "subject": "Your TECHNOVANZA 2026 Food Pass",
             "textContent": (
-                f"Hello {participant.get('name', 'Participant')},\n\n"
-                "Your food collection QR code is attached. "
-                "Please show it at the food counter."
+                f"Hello {participant_name},\n\n"
+                "Your TECHNOVANZA 2026 food pass is attached as a PNG file. "
+                "Please show it at the food counter to collect your food. "
+                "Do not share this QR code."
+            ),
+            "htmlContent": render_to_string(
+                "food/emails/food_pass.html",
+                {
+                    "participant_name": participant_name,
+                    "manual_code": participant.get("manual_code", ""),
+                },
             ),
             "attachment": [{
                 "content": base64.b64encode(qr["binary_data"]).decode("ascii"),
