@@ -94,7 +94,11 @@ def get_participant_for_code(supabase, code):
 # ========== AUTHENTICATION ==========
 
 def login_view(request):
+    next_url = request.GET.get('next') or request.POST.get('next')
+
     if request.user.is_authenticated:
+        if next_url and not next_url.startswith('//') and next_url != request.path:
+            return redirect(next_url)
         return redirect('food:dashboard')
     
     if request.method == 'POST':
@@ -104,11 +108,13 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
+            if next_url and not next_url.startswith('//') and next_url != request.path:
+                return redirect(next_url)
             return redirect('food:dashboard')
         else:
             messages.error(request, 'Invalid username or password')
     
-    return render(request, 'partials/login.html')
+    return render(request, 'partials/login.html', {'next': next_url})
 
 @login_required
 def logout_view(request):
@@ -120,15 +126,27 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
-    supabase = get_supabase()
+    participants = []
+    claims = []
+    is_supabase_active = False
 
-    # Get all participants
-    response = supabase.table("participants").select("*").execute()
-    participants = response.data
+    try:
+        supabase = get_supabase()
+        response = supabase.table("participants").select("*").execute()
+        participants = response.data or []
+        is_supabase_active = True
+    except Exception as e:
+        messages.warning(request, f"Supabase sync unavailable: {str(e)}")
 
-    claims = supabase.table('claims').select('participant_id, claimed_at').execute().data
+    try:
+        if is_supabase_active:
+            claims_res = supabase.table('claims').select('participant_id, claimed_at').execute()
+            claims = claims_res.data or []
+    except Exception:
+        claims = []
+
     claims_by_participant = {
-        claim['participant_id']: claim for claim in claims
+        claim['participant_id']: claim for claim in claims if isinstance(claim, dict) and 'participant_id' in claim
     }
     for participant in participants:
         claim = claims_by_participant.get(participant.get('id'))
@@ -138,8 +156,8 @@ def dashboard(request):
         participant['display_id'] = participant.get('manual_code') or participant.get('participant_id') or participant.get('id')
 
     total = len(participants)
-    claimed = sum(participant['food_claimed'] for participant in participants)
-    unclaimed = total - claimed
+    claimed = sum(bool(participant.get('food_claimed')) for participant in participants)
+    unclaimed = max(0, total - claimed)
     veg_participants = [
         participant for participant in participants
         if str(participant.get('food_preference', '')).lower() == 'veg'
@@ -155,9 +173,9 @@ def dashboard(request):
         'unclaimed': unclaimed,
         'veg_total': len(veg_participants),
         'non_veg_total': len(non_veg_participants),
-        'veg_claimed': sum(participant['food_claimed'] for participant in veg_participants),
-        'non_veg_claimed': sum(participant['food_claimed'] for participant in non_veg_participants),
-        'is_supabase_active': bool(os.getenv('SUPABASE_URL') and os.getenv('SUPABASE_KEY')),
+        'veg_claimed': sum(bool(participant.get('food_claimed')) for participant in veg_participants),
+        'non_veg_claimed': sum(bool(participant.get('food_claimed')) for participant in non_veg_participants),
+        'is_supabase_active': is_supabase_active,
         'participants': participants,
     }
     return render(request, 'food/dashboard.html', context)

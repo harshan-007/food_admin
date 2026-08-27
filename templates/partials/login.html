@@ -41,6 +41,11 @@
             <!-- Login Form -->
             <form id="loginForm" method="POST" action="{% url 'food:login' %}">
                 {% csrf_token %}
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                {% elif request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
 
                 <!-- Username -->
                 <div class="mb-3">

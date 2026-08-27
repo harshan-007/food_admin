@@ -6,6 +6,8 @@ app_name = 'food'
 urlpatterns = [
     # Authentication
     path('', views.login_view, name='login'),
+    path('login/', views.login_view, name='login_page'),
+    path('accounts/login/', views.login_view, name='accounts_login'),
     path('logout/', views.logout_view, name='logout'),
     
     # Dashboard

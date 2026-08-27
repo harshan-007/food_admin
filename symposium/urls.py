@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('food.urls')),  # Includes login as root
+    path('food/', include('food.urls')),  # Includes /food/ prefix if navigated directly
 ]
 
 if settings.DEBUG:
