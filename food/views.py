@@ -5,10 +5,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import json
-from symposium.supabase_config import get_supabase
+from symposium.supabase_config import get_supabase, get_supabase_admin
+from .email_utils import send_and_record_participant_email
 
 
 def format_claimed_at(value):
@@ -164,6 +167,88 @@ def dashboard(request):
 @login_required
 def scanner(request):
     return render(request, 'food/scanner.html')
+
+
+@login_required
+def email_page(request):
+    return render(request, 'food/email.html')
+
+
+@login_required
+def mail_participants_list(request):
+    participants = get_supabase_admin().table('participants').select(
+        'id,name,email,mail_sent,mail_sent_at,mail_delivered,mail_delivered_at'
+    ).order('name').execute().data
+    return JsonResponse(participants, safe=False)
+
+
+def _send_mail_for_participant(request, participant_id, resend=False):
+    supabase = get_supabase_admin()
+    participant_response = supabase.table('participants').select('*').eq(
+        'id', participant_id
+    ).limit(1).execute()
+    if not participant_response.data:
+        return JsonResponse({'error': 'Participant not found'}, status=404)
+
+    participant = participant_response.data[0]
+    if participant.get('mail_sent') and not resend:
+        return JsonResponse({'success': False, 'error': 'Email already sent'}, status=400)
+
+    try:
+        sent = send_and_record_participant_email(participant)
+    except Exception as error:
+        return JsonResponse({'success': False, 'error': str(error)}, status=502)
+
+    participant.update(sent)
+    participant['mail_sent'] = True
+    return JsonResponse({'success': True, 'participant': participant})
+
+
+@login_required
+def send_mail_participant(request, participant_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=400)
+    return _send_mail_for_participant(request, participant_id)
+
+
+@login_required
+def resend_mail_participant(request, participant_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=400)
+    return _send_mail_for_participant(request, participant_id, resend=True)
+
+
+@csrf_exempt
+def brevo_webhook(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=400)
+    webhook_token = request.headers.get('X-Brevo-Webhook-Token') or request.GET.get('token')
+    if not settings.BREVO_WEBHOOK_TOKEN or webhook_token != settings.BREVO_WEBHOOK_TOKEN:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        event = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    event_name = str(event.get('event', '')).lower()
+    message_id = event.get('message-id') or event.get('messageId')
+    email = event.get('email')
+    supabase = get_supabase_admin()
+    if message_id:
+        query = supabase.table('participants').update({
+            'mail_delivered': event_name == 'delivered',
+            'mail_delivered_at': timezone.now().isoformat() if event_name == 'delivered' else None,
+        }).eq('brevo_message_id', message_id)
+    elif email:
+        query = supabase.table('participants').update({
+            'mail_delivered': event_name == 'delivered',
+            'mail_delivered_at': timezone.now().isoformat() if event_name == 'delivered' else None,
+        }).eq('email', email)
+    else:
+        return JsonResponse({'ok': True})
+    query.execute()
+    return JsonResponse({'ok': True})
 
 # ========== API ENDPOINTS ==========
 
